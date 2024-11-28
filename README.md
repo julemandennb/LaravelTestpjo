@@ -1,3 +1,10 @@
+Det er et projekt, der bruges til at afprøve nye idéer og have det sjovt med at eksperimentere.
+Hvis jeg skal udvikle et API til dette projekt, vil jeg benytte [Laravel Sanctum](https://laravel.com/docs/11.x/sanctum#how-it-works).
+
+
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
