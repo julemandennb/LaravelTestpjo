@@ -37,7 +37,7 @@ const selectchange = () =>
 
 const deleteFromprodukt = (id) =>{
 
-    form.Produkts = form.Produkt.filter(x => x.id !== id);
+    form.Produkts = form.Produkts.filter(x => x.id !== id);
 
 
 }
@@ -71,22 +71,29 @@ const deleteFromOrder = (id) =>{
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
+                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-5"
                 >
+
+                <div class="overflow-x-auto flex justify-center"><Label class="text-xl">Orders</Label></div>
+
                     <div class="overflow-x-auto flex justify-center">
 
                             <table>
                                 <tr>
-                                    <th class="px-4 py-2 border text-center">id</th>
-                                    <th class="px-4 py-2 border text-center">total price</th>
-                                    <th class="px-4 py-2 border text-center">Delete</th>
+                                    <th class="px-4 py-2 border text-center"><Label>id</Label></th>
+                                    <th class="px-4 py-2 border text-center"><Label>total price</Label></th>
+                                    <th class="px-4 py-2 border text-center"><Label>total produkt</Label></th>
+                                    <th class="px-4 py-2 border text-center"><Label>show</Label></th>
+                                    <th class="px-4 py-2 border text-center"><Label>Delete</Label></th>
                                  
                                 </tr>
 
                                 <tr v-for="itme in orderList">
-                                    <td class="px-4 py-2 border text-center">{{itme.id}}</td>
-                                    <td class="px-4 py-2 border text-center">{{itme.total_price}}</td>
-                                    <td @click="deleteFromOrder(itme.id)" class="px-4 py-2 border text-center">Delete</td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.id}}</Label></td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.total_price}}</Label></td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.products.length}}</Label></td>
+                                    <td class="px-4 py-2 border text-center"><Label> <a :href="route('order.show',{ order: itme.id })">Show order</a></Label></td>
+                                    <td @click="deleteFromOrder(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
                                    
 
                                 </tr>
@@ -96,18 +103,17 @@ const deleteFromOrder = (id) =>{
 
 
                     </div>
-
-                   
-
-
                     
                 </div>
 
                 <div
-                    class="bg-white shadow-sm sm:rounded-lg mt-5 h-96"
+                    class="bg-white shadow-sm sm:rounded-lg mt-5 h-96 p-5"
                 >
-                    
+                   
+                <div class="overflow-x-auto flex justify-center"><Label class="text-xl">make Order</Label></div>
+
                 <div class="overflow-x-auto flex justify-center">
+                    
                     <select v-model="AddProd" @change="selectchange">
                         <option value="0" disabled selected hidden>add a produkt</option>
                         <option v-for="produkt in produktList" :value="produkt.id">{{ produkt.name }}</option>
@@ -120,15 +126,15 @@ const deleteFromOrder = (id) =>{
 
                         <table>
                                 <tr>
-                                    <th class="px-4 py-2 border text-center">name</th>
-                                    <th class="px-4 py-2 border text-center">price</th>
-                                    <th class="px-4 py-2 border text-center">Delete</th>
+                                    <th class="px-4 py-2 border text-center"><Label>name</Label></th>
+                                    <th class="px-4 py-2 border text-center"><Label>price</Label></th>
+                                    <th class="px-4 py-2 border text-center"><Label>Delete</Label></th>
                                 </tr>
 
                                 <tr v-for="itme in form.Produkts">
-                                    <td class="px-4 py-2 border text-center">{{itme.name}}</td>
-                                    <td class="px-4 py-2 border text-center">{{itme.prise}}</td>
-                                    <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center">Delete</td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.name}}</Label></td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.prise}}</Label></td>
+                                    <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
                                 </tr>
                                     
                             </table>

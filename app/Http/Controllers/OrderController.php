@@ -17,8 +17,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orderList = Order::all();
-        $produktList = Produkt::all();
+        $orderList = Order::all()->load("products");
+        $produktList = Produkt::select('id', 'name', 'prise')->get();
         return Inertia::render('Order/index',["orderList" => $orderList,"produktList" => $produktList]);
     }
 
@@ -35,55 +35,51 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-
-
-        // Create the order
         $order = new Order([
             'user_id' => auth()->user()->id,
-            'total_price' => 0, // Will update later after calculating total price
+            'total_price' => 0,
         ]);
 
-        // Save the order to get an ID
+       
         $order->save();
 
-        // Get the products list from the request
-        $produkts = $request->input('Produkts'); // This should be an array of products
+        $produkts = $request->input('Produkts');
 
-        // Initialize total price
+       
         $totalPrice = 0;
 
-        // Loop through each product in the list
+      
         foreach ($produkts as $produkt) {
-            // You may want to validate the structure of each product in the list
-            $productId = $produkt['id'];  // Assuming the product has an 'id' field
-            // Retrieve the product from the database
+            
+            $productId = $produkt['id']; 
+            
             $product = Produkt::find($productId);
             if ($product) {
 
                 $quantity = 1;
                 $existingProduct = $order->products()->where('produkt_id', $productId)->first();
                 if ($existingProduct) {
-                    // If it exists, increment the quantity
+                  
                     $quantity = $existingProduct->pivot->quantity + 1;
                 
-                    // Update the pivot table with the new quantity
+                    
                     $order->products()->updateExistingPivot($productId, ['quantity' => $quantity]);
                 } else {
-                    // If it doesn't exist, attach it with quantity = 1
+                   
                     $order->products()->attach($productId, ['quantity' => $quantity, 'price' => $product->prise]);
                 }
-                // Calculate the total price for this product (price * quantity)
+               
                 $totalPrice += $product->prise;
             }
         }
 
-        // Update the order's total price
+       
         $order->total_price = $totalPrice;
 
-        // Save the updated order
+       
         $order->save();
 
-        // Return the created order as a response
+       
         return response()->noContent(200);
 
         
@@ -94,7 +90,15 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        $order->load([
+            'products',
+            'user' => function ($query) {
+                $query->select('id', 'name'); // Always include the `id` to maintain relationships
+            },
+        ]);
+        $produktList = Produkt::select('id', 'name', 'prise')->get();
+
+        return Inertia::render('Order/show',["order" => $order,"produktList" => $produktList]);
     }
 
     /**
@@ -110,7 +114,50 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        //
+           
+        $produkts = $request->input('Produkts'); 
+
+        $newProduktIds = collect($produkts)->pluck('id')->toArray();
+
+        $oldprodukts = $order->products;
+
+        $toRemove = $oldprodukts->whereNotIn('id', $newProduktIds)->pluck('id');
+
+        
+        $order->products()->detach($toRemove);
+
+
+        $totalPrice = 0;
+
+   
+        foreach ($produkts as $produkt) {
+        
+            $productId = $produkt['id'];
+            
+
+            $product = Produkt::find($productId);
+            
+            if ($product) {
+
+                $existingProduct = $order->products()->where('produkt_id', $productId)->first();
+
+                if ($existingProduct) {
+
+                    $quantity = $existingProduct->pivot->quantity + 1;
+                    $order->products()->updateExistingPivot($productId, ['quantity' => $quantity]);
+                } else {
+
+                    $order->products()->attach($productId, ['quantity' => 1, 'price' => $product->prise]);
+                }
+                $totalPrice += $product->prise;
+            }
+    }
+
+        $order->total_price = $totalPrice;
+
+        $order->save();
+
+        return response()->noContent(200);
     }
 
     /**

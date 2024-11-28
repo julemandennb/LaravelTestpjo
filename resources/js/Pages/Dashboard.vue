@@ -23,7 +23,7 @@ import { Head } from '@inertiajs/vue3';
                 >
                     <div class="p-6 text-gray-900">
                         <a :href="route('order.index')">
-                            <PrimaryButton> Show order
+                            <PrimaryButton> Show orders
                             </PrimaryButton>
                         </a>
             
