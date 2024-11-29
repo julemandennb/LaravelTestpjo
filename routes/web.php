@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/order/{order}', [OrderController::class, 'destroy'])->name('order.delete');
 
 
+    Route::get('/profile/token', [ProfileController::class, 'getAToken'])->name('profile.getAToken');
+
 
 });
 
