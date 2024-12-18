@@ -8,10 +8,13 @@ use Inertia\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\MakeATokenRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\DeleteATokenRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use function Laravel\Prompts\error;
 
 class ProfileController extends Controller
 {
@@ -68,10 +71,14 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function makeAToken()
+    public function makeAToken(MakeATokenRequest $request)
     {
+        $validatedData = $request->validated();
+        $name = $validatedData['name'];
+
         $user = User::find(auth()->user()->id);
-        $token = $user->createToken("UserToken");
+        $token = $user->createToken($name);
+
         return response()->json([
             'status' => 'success',
             'token' => $token->plainTextToken,
@@ -80,7 +87,6 @@ class ProfileController extends Controller
 
     public function deleteAToken(DeleteATokenRequest $request)
     {
-
         // If validation passes, you can access the validated data
         $validatedData = $request->validated();
 

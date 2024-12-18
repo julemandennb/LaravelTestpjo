@@ -7,6 +7,8 @@ import { useForm } from '@inertiajs/vue3';
 import TextInput from '@/Components/TextInput.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import InputError from '@/Components/InputError.vue'
+import axios from "axios";
+
 
 const props = defineProps({
     tokens: Array,
@@ -16,10 +18,38 @@ const makeToken =useForm({
     name:""
 })
 
+const newtoken = ref('');
 
 const submit = () =>{
 
 
+    console.log(makeToken.name);
+    
+    axios.post(route('profile.makeAToken'), {
+        name: makeToken.name,  // Send the name parameter in the request body
+      })
+      .then((response) => {
+        // Handle success
+        console.log(response.data.token);
+
+        // Extract the token from the response
+        newtoken.value =response.data.token;
+
+        // Store the token in the form state
+       // this.makeToken.token = token;
+
+        // Optionally, reset the form or handle UI changes
+        makeToken.reset();
+      })
+      .catch((error) => {
+       
+        console.error("Failed to create token:", error);
+
+        makeToken.errors.name = error.response?.data?.message || 'An unknown error occurred.';
+
+      })
+      .finally(() => {
+      });
 }
 
 const deleteToken = (id) => {
@@ -78,12 +108,16 @@ const deleteToken = (id) => {
 
         <div class="mt-5 w-52">
 
+            <div class="mt-5 mb-5">
+                <InputLabel v-if="newtoken" for="newtoken" :value="'New token is ' + newtoken" />
+            </div>
+
             <form @submit.prevent="submit">
 
                 <div>
-                    <InputLabel for="name" value="name" />
+                    <InputLabel for="Tokenname" value="name" />
                     <TextInput
-                        id="name"
+                        id="Tokenname"
                         type="text"
                         class="mt-1 block w-full"
                         v-model="makeToken.name"
