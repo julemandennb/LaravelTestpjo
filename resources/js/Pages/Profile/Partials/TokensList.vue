@@ -33,7 +33,14 @@ const submit = () =>{
         console.log(response.data.token);
 
         // Extract the token from the response
-        newtoken.value =response.data.token;
+        newtoken.value = response.data.token;
+
+        let data = {
+            name:makeToken.name
+        }
+
+
+        props.tokens.push(data);
 
         // Store the token in the form state
        // this.makeToken.token = token;
@@ -97,7 +104,7 @@ const deleteToken = (id) => {
                 <div>{{FormatDato(token.expires_at)}}</div>
                 <div>{{FormatDato(token.created_at)}}</div>
                 <div>{{FormatDato(token.updated_at)}}</div>
-                <div><DangerButton @click="deleteToken(token.id)">
+                <div><DangerButton v-if="token.id" @click="deleteToken(token.id)">
                         Delete Token</DangerButton></div>
 
             </template>
