@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\MakeATokenRequest;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\DeleteATokenRequest;
+use App\Http\Requests\ProfileUpdateRequest;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use function Laravel\Prompts\error;
 
 class ProfileController extends Controller
 {
@@ -18,8 +23,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = User::find(auth()->user()->id);
+
+        $tokens = $user->tokens->select("id","name","last_used_at","expires_at","created_at","updated_at");
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'tokens' => $tokens,
             'status' => session('status'),
         ]);
     }
@@ -60,4 +70,38 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function makeAToken(MakeATokenRequest $request)
+    {
+        $validatedData = $request->validated();
+        $name = $validatedData['name'];
+
+        $user = User::find(auth()->user()->id);
+        $token = $user->createToken($name);
+
+        return response()->json([
+            'status' => 'success',
+            'token' => $token->plainTextToken,
+        ]);
+    }
+
+    public function deleteAToken(DeleteATokenRequest $request)
+    {
+        // If validation passes, you can access the validated data
+        $validatedData = $request->validated();
+
+        // Access the 'id' field from the validated data
+        $id = $validatedData['id'];
+
+        $user = User::find(auth()->user()->id);
+
+        $user->tokens()->where('id', $id)->delete();
+
+        return response()->noContent(200);
+
+    }
+
+
+
+
 }
