@@ -39,6 +39,19 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('order.index')"
+                                    :active="route().current('order.index')"
+                                >
+                                    Orders
+                                </NavLink>
+
+                                <NavLink
+                                    :href="route('livechat.index')"
+                                    :active="route().current('livechat.index')"
+                                >
+                                Livechat
+                                </NavLink>
                             </div>
                         </div>
 
