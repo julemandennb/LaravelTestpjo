@@ -5,7 +5,7 @@ const emit = defineEmits(['sendId']);
 
 // Define the prop to receive the orderList
 const props = defineProps({
-  users: Array, // Make sure it's passed as an object
+  users: Array, 
 });
 
 

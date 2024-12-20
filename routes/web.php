@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/order/{order}', [OrderController::class, 'destroy'])->name('order.delete');
 
     Route::get('/livechat',[LiveChatController::class, 'index'])->name('livechat.index');
+    Route::get('/livechat/{user}',[LiveChatController::class, 'chat'])->name('livechat.chat');
+    Route::post('/livechat/{user}',[LiveChatController::class, 'send'])->name('livechat.send');
 
 
 
