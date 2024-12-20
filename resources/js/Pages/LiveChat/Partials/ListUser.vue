@@ -11,7 +11,6 @@ const props = defineProps({
 
 //onclick event sendt id to parent
 const sendId = (id) => {
-    console.log(id)
     //emit the id to the parent
     emit('sendId', id)
 }

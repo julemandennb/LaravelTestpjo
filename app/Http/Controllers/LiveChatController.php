@@ -36,7 +36,7 @@ class LiveChatController extends Controller
 
     public function send(User $user)
     {
-        dd(564545);
+
         $message = ChatMessage::create([
             'sender_id' => auth()->id(),
             'receiver_id' => $user->id,
