@@ -1,7 +1,7 @@
 Det er et projekt, der bruges til at afprøve nye idéer og have det sjovt med at eksperimentere.
 har add [Laravel Sanctum](https://laravel.com/docs/11.x/sanctum#how-it-works).
 
-
+to start chat server 'sail php artisan reverb:start --debug'
 
 
 

@@ -29,6 +29,7 @@ const sendMessage = () => {
       .then(response => {
         console.log('Message sent:', response.data);
         TextToSend.value = '';
+        messages.value.push(response.data);
       })
       .catch(error => {
         console.error('Error sending message:', error);
@@ -52,21 +53,9 @@ const echoFun = () =>{
         .listen("MessageSent", (response) => {
             console.log(response)
             messages.value.push(response.message);
+
+            console.log(messages.value)
         })
-       /* .listenForWhisper("typing", (response) => {
-            isFriendTyping.value = response.userID === user_id.value;
- 
-            if (isFriendTypingTimer.value) {
-                clearTimeout(isFriendTypingTimer.value);
-            }
- 
-            isFriendTypingTimer.value = setTimeout(() => {
-                isFriendTyping.value = false;
-            }, 1000);
-        });*/
-
-
-
 }
 
 
@@ -77,7 +66,7 @@ const echoFun = () =>{
     <div class="HoldMessage flex-grow overflow-y-auto p-5 ">
         <div class="border border-gray-200 h-full w-full">
             
-            <div ref="messagesContainer" class="p-4 overflow-y-auto max-h-fit">
+            <div ref="messagesContainer" class="p-4 overflow-y-auto h-[35rem]">
 
                 <div
                     v-for="message in messages"
