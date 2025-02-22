@@ -21,13 +21,7 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
-                    <div class="p-6 text-gray-900">
-                        <a :href="route('order.index')">
-                            <PrimaryButton> Show orders
-                            </PrimaryButton>
-                        </a>
-            
-                    </div>
+                   hop hop
 
                     
                 </div>

@@ -54,4 +54,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    // A user can have many messages (one-to-many)
+    public function messages(): HasMany
+    {
+        return $this->hasMany(ChatMessage::class);
+    }
 }
