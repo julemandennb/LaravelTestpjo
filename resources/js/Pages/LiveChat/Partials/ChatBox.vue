@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 const props = defineProps({
-  user_id: Number, 
+  user_id: Number,
   currentuser_id: Number
 });
 
@@ -49,12 +49,13 @@ const getmessages = () => {
 
 const echoFun = () =>{
 
+    console.log('Listening to channel:', `chat.${props.currentuser_id}`);
     Echo.private(`chat.${props.currentuser_id}`)
         .listen("MessageSent", (response) => {
-            console.log(response)
-            messages.value.push(response.message);
+            console.log("rfrfr", response)
+            messages.value.push(response);
 
-            console.log(messages.value)
+            console.log("fffff" ,messages.value)
         })
 }
 
@@ -65,7 +66,7 @@ const echoFun = () =>{
 <div class="chat-container h-full flex flex-col">
     <div class="HoldMessage flex-grow overflow-y-auto p-5 ">
         <div class="border border-gray-200 h-full w-full">
-            
+
             <div ref="messagesContainer" class="p-4 overflow-y-auto h-[35rem]">
 
                 <div
@@ -82,15 +83,15 @@ const echoFun = () =>{
                     <div v-else class="p-2 mr-auto bg-gray-200 rounded-lg">
                         {{ message.text }}
                     </div>
-            
-            
+
+
                 </div>
 
 
             </div>
 
         </div>
-        
+
     </div>
 
     <div class="newMessage flex-shrink-0 p-4">
