@@ -42,9 +42,9 @@ class LiveChatController extends Controller
             'receiver_id' => $user->id,
             'text' => request()->input('message')
         ]);
-     
+
         broadcast(new MessageSent($message));
-     
+
         return $message;
     }
 }
