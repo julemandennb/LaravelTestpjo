@@ -1,7 +1,7 @@
 <script setup>
 import { watch } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref,nextTick  } from 'vue';
 import axios from 'axios';
 
 
@@ -15,11 +15,22 @@ const user_id = ref(props.user_id)
 const TextToSend = ref('')
 const messages = ref([]);
 
+const messagesContainer = ref(null);
+
+const broadcaster = ref(null);
+const channelName = ref(null);
+
+
 watch(() => props.user_id, (newVal, oldVal) => {
     user_id.value = newVal
     getmessages();
     echoFun();
 })
+
+watch(messages, async () => {
+    await nextTick();
+    scrollToBottom();
+}, { deep: true });
 
 
 const sendMessage = () => {
@@ -47,15 +58,34 @@ const getmessages = () => {
       });
 }
 
+const scrollToBottom = async () => {
+    await nextTick();
+    if (messagesContainer.value) {
+
+        messagesContainer.value.scrollTop =
+            messagesContainer.value.scrollHeight;
+
+    }
+};
+
 const echoFun = () =>{
 
-    console.log('Listening to channel:', `chat.${props.currentuser_id}`);
-    Echo.private(`chat.${props.currentuser_id}`)
+    if (channelName.value) {
+        Echo.leave(channelName.value);
+    }
+
+    channelName.value = `chat.${props.currentuser_id}`;
+
+   broadcaster.value = Echo.private(`chat.${props.currentuser_id}`)
         .listen("MessageSent", (response) => {
-            console.log("rfrfr", response)
+
+            if(response.sender_id !=  user_id.value)
+            {
+                return;
+            }
+
             messages.value.push(response);
 
-            console.log("fffff" ,messages.value)
         })
 }
 
