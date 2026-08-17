@@ -39,11 +39,10 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request,CreateOrderAction $createOrder)
     {
-       // dd($request->validated());
 
         $createOrder->execute(
             userId: auth()->id(),
-            produkts: $request->validated('produkts'),
+            orderData: $request->dto()
         );
 
         return response()->noContent(200);

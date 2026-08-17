@@ -20,7 +20,7 @@ const form = useForm({
     address: "",
     postNr: "",
     status: props.statusList?.[0]?.Id ?? '',
-    produkts: [],
+    products: [],
 });
 
 const submit = () => {
@@ -36,14 +36,14 @@ const selectchange = () =>
 
     let produkt = props.produktList.find(x => x.id == AddProd.value)
 
-    form.produkts.push(produkt);
+    form.products.push(produkt);
 
     AddProd.value = 0
 }
 
 const deleteFromprodukt = (id) =>{
 
-    form.produkts = form.produkts.filter(x => x.id !== id);
+    form.products = form.products.filter(x => x.id !== id);
 
 
 }
@@ -132,7 +132,7 @@ const deleteFromprodukt = (id) =>{
                                 </thead>
 
                                 <tbody>
-                                    <tr v-for="itme in form.produkts" :key="itme.id">
+                                    <tr v-for="itme in form.products" :key="itme.id">
                                         <td class="px-4 py-2 border text-center"><Label>{{ itme.name }}</Label></td>
                                         <td class="px-4 py-2 border text-center"><Label>{{ itme.price }}</Label></td>
                                         <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center cursor-pointer"><Label>Delete</Label></td>

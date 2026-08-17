@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Order;
 
+use App\Dto\Order\OrderData;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enum\OrderStatus;
@@ -30,14 +31,19 @@ class StoreOrderRequest extends FormRequest
             'address' => 'required|string',
             'postNr' => 'required|numeric|digits:4',
             'status' => ['required', Rule::enum(OrderStatus::class)],
-            'produkts' => 'required|array',
+            'products' => 'required|array',
 
             'products.*.id' => [
-            'required',
-            'integer',
-            'exists:produkts,id',
-        ],
+                'required',
+                'integer',
+                'exists:produkts,id',
+            ],
         ];
+    }
+
+    public function dto():OrderData
+    {
+        return OrderData::from($this->validated());
     }
 
 }

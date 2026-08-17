@@ -1,15 +1,18 @@
 <?php
 namespace App\Actions\Order;
 
+use App\Dto\Order\OrderData;
 use App\Models\Order;
 use App\Models\Produkt;
 use Illuminate\Support\Facades\DB;
 
 class CreateOrderAction
 {
-    public function execute(int $userId, array $produkts): Order
+    public function execute(int $userId, OrderData $orderData): Order
     {
-        return DB::transaction(function () use ($userId, $produkts) {
+        return DB::transaction(function () use ($userId, $orderData) {
+
+            $produkts = $orderData->products;
             $quantities = collect($produkts)
                 ->groupBy('id')
                 ->map(fn ($items) => $items->count());
@@ -22,6 +25,12 @@ class CreateOrderAction
             $order = Order::create([
                 'user_id' => $userId,
                 'total_price' => 0,
+                'name' => $orderData->name,
+                'email' => $orderData->email,
+                'phone' => $orderData->phone,
+                'address'  => $orderData->address,
+                'postNr' => $orderData->postNr,
+                'status' => $orderData->status
             ]);
 
             $totalPrice = 0;
