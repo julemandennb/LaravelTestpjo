@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { Head,useForm } from '@inertiajs/vue3';
 
-import FormatDato from '@/FunScript/FormatDato.js'
+import FormatDato from '@/help/FormatDato.js'
 
 import Label from '@/Components/Label.vue'
 
@@ -90,7 +90,7 @@ const updata = () => {
 
                             <div>total price</div>
                             <div>{{ order.total_price }}</div>
-                            
+
                         </div>
 
 
@@ -109,38 +109,38 @@ const updata = () => {
 
                                 <tr v-for="itme in order.products">
                                     <td class="px-4 py-2 border text-center"><Label>{{itme.name}}</Label></td>
-                                    <td class="px-4 py-2 border text-center"><Label>{{itme.prise}}</Label></td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.price}}</Label></td>
                                     <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
                                 </tr>
-                                    
+
                             </table>
-   
+
                 </div>
-                    
+
                 </div>
 
                 <div
                     class="bg-white shadow-sm sm:rounded-lg mt-5 h-96 p-5"
                 >
-                   
+
                 <div class="overflow-x-auto flex justify-center"><Label class="text-xl">add new product</Label></div>
 
                 <div class="overflow-x-auto flex justify-center">
-                    
+
                     <select v-model="AddProd" @change="selectchange">
                         <option value="0" disabled selected hidden>add a produkt</option>
                         <option v-for="produkt in produktList" :value="produkt.id">{{ produkt.name }}</option>
                     </select>
                 </div>
-                        
-            
-                
 
 
 
-                
-            
-            
+
+
+
+
+
+
                 </div>
 
 

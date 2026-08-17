@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
+use App\Actions\Order\CreateOrderAction;
+use App\Http\Requests\Order\StoreOrderRequest;
+use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\Produkt;
+use App\Enum\OrderStatus;
 use Inertia\Inertia;
 
 
@@ -18,7 +20,7 @@ class OrderController extends Controller
     public function index()
     {
         $orderList = Order::all()->load("products");
-        $produktList = Produkt::select('id', 'name', 'prise')->get();
+        $produktList = Produkt::select('id', 'name', 'price')->get();
         return Inertia::render('Order/index',["orderList" => $orderList,"produktList" => $produktList]);
     }
 
@@ -27,62 +29,26 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $produktList = Produkt::select('id', 'name', 'price')->get();
+
+        return Inertia::render('Order/create',["produktList" => $produktList,"statusList" => OrderStatus::list()]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOrderRequest $request)
+    public function store(StoreOrderRequest $request,CreateOrderAction $createOrder)
     {
-        $order = new Order([
-            'user_id' => auth()->user()->id,
-            'total_price' => 0,
-        ]);
+       // dd($request->validated());
 
-       
-        $order->save();
+        $createOrder->execute(
+            userId: auth()->id(),
+            produkts: $request->validated('produkts'),
+        );
 
-        $produkts = $request->input('Produkts');
-
-       
-        $totalPrice = 0;
-
-      
-        foreach ($produkts as $produkt) {
-            
-            $productId = $produkt['id']; 
-            
-            $product = Produkt::find($productId);
-            if ($product) {
-
-                $quantity = 1;
-                $existingProduct = $order->products()->where('produkt_id', $productId)->first();
-                if ($existingProduct) {
-                  
-                    $quantity = $existingProduct->pivot->quantity + 1;
-                
-                    
-                    $order->products()->updateExistingPivot($productId, ['quantity' => $quantity]);
-                } else {
-                   
-                    $order->products()->attach($productId, ['quantity' => $quantity, 'price' => $product->prise]);
-                }
-               
-                $totalPrice += $product->prise;
-            }
-        }
-
-       
-        $order->total_price = $totalPrice;
-
-       
-        $order->save();
-
-       
         return response()->noContent(200);
 
-        
+
     }
 
     /**
@@ -96,7 +62,7 @@ class OrderController extends Controller
                 $query->select('id', 'name'); // Always include the `id` to maintain relationships
             },
         ]);
-        $produktList = Produkt::select('id', 'name', 'prise')->get();
+        $produktList = Produkt::select('id', 'name', 'price')->get();
 
         return Inertia::render('Order/show',["order" => $order,"produktList" => $produktList]);
     }
@@ -114,8 +80,8 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-           
-        $produkts = $request->input('Produkts'); 
+
+        $produkts = $request->input('Produkts');
 
         $newProduktIds = collect($produkts)->pluck('id')->toArray();
 
@@ -123,20 +89,20 @@ class OrderController extends Controller
 
         $toRemove = $oldprodukts->whereNotIn('id', $newProduktIds)->pluck('id');
 
-        
+
         $order->products()->detach($toRemove);
 
 
         $totalPrice = 0;
 
-   
+
         foreach ($produkts as $produkt) {
-        
+
             $productId = $produkt['id'];
-            
+
 
             $product = Produkt::find($productId);
-            
+
             if ($product) {
 
                 $existingProduct = $order->products()->where('produkt_id', $productId)->first();
@@ -147,11 +113,11 @@ class OrderController extends Controller
                     $order->products()->updateExistingPivot($productId, ['quantity' => $quantity]);
                 } else {
 
-                    $order->products()->attach($productId, ['quantity' => 1, 'price' => $product->prise]);
+                    $order->products()->attach($productId, ['quantity' => 1, 'price' => $product->price]);
                 }
-                $totalPrice += $product->prise;
+                $totalPrice += $product->price;
             }
-    }
+        }
 
         $order->total_price = $totalPrice;
 

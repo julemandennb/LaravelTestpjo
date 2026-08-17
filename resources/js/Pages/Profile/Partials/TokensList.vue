@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import FormatDato from '@/FunScript/FormatDato.js'
+import FormatDato from '@/help/FormatDato.js'
 import DangerButton from '@/Components/DangerButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { useForm } from '@inertiajs/vue3';
@@ -24,7 +24,7 @@ const submit = () =>{
 
 
     console.log(makeToken.name);
-    
+
     axios.post(route('profile.makeAToken'), {
         name: makeToken.name,  // Send the name parameter in the request body
       })
@@ -49,7 +49,7 @@ const submit = () =>{
         makeToken.reset();
       })
       .catch((error) => {
-       
+
         console.error("Failed to create token:", error);
 
         makeToken.errors.name = error.response?.data?.message || 'An unknown error occurred.';

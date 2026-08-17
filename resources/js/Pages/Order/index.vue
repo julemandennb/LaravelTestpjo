@@ -140,7 +140,7 @@ const deleteFromOrder = (id) =>{
                             <tbody>
                                 <tr v-for="itme in form.Produkts">
                                     <td class="px-4 py-2 border text-center"><Label>{{itme.name}}</Label></td>
-                                    <td class="px-4 py-2 border text-center"><Label>{{itme.prise}}</Label></td>
+                                    <td class="px-4 py-2 border text-center"><Label>{{itme.price}}</Label></td>
                                     <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
                                 </tr>
                             </tbody>
