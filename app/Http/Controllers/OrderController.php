@@ -9,7 +9,7 @@ use App\Models\Order;
 use App\Models\Produkt;
 use App\Enum\OrderStatus;
 use Inertia\Inertia;
-
+use Illuminate\Http\Request;
 
 
 class OrderController extends Controller
@@ -17,11 +17,68 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index(Request $request)
     {
-        $orderList = Order::all()->load("products");
-        $produktList = Produkt::select('id', 'name', 'price')->get();
-        return Inertia::render('Order/index',["orderList" => $orderList,"produktList" => $produktList]);
+        $perPage = min((int) $request->input('per_page', 10), 100);
+
+        $search = $request->input('search');
+        $sort = $request->input('sort', 'updated_at');
+        $direction = $request->input('direction', 'desc');
+        $status = $request->input('status','all');
+
+        $allowedSorts = [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'total_price',
+            'updated_at',
+        ];
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'updated_at';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        $orderList = Order::query()
+            ->select([
+                'id',
+                'total_price',
+                'name',
+                'email',
+                'phone',
+                'updated_at',
+                'status'
+            ])
+            ->when($status, function($query, $status){
+                if($status !="all")
+                    $query->where('status',$status);
+            })
+            ->when($search, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy($sort, $direction)
+            ->paginate($perPage)
+            ->withQueryString();
+
+        return Inertia::render('Order/index', [
+            'orderList' => $orderList,
+            'statusList' => OrderStatus::list(),
+            'filters' => [
+                'search' => $search,
+                'sort' => $sort,
+                'direction' => $direction,
+                'per_page' => $perPage,
+                'status' => $status
+            ],
+        ]);
     }
 
     /**
@@ -63,7 +120,7 @@ class OrderController extends Controller
         ]);
         $produktList = Produkt::select('id', 'name', 'price')->get();
 
-        return Inertia::render('Order/show',["order" => $order,"produktList" => $produktList]);
+        return Inertia::render('Order/show',["order" => $order,"produktList" => $produktList,"statusList" => OrderStatus::list()]);
     }
 
     /**

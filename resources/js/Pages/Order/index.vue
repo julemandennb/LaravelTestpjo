@@ -1,165 +1,272 @@
 <script setup>
-import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue'
-import { Head,useForm } from '@inertiajs/vue3';
+import Label from '@/Components/Label.vue';
+import { Head, router, useForm } from '@inertiajs/vue3';
+import FormatDato from '@/help/FormatDato.js'
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 
-import Label from '@/Components/Label.vue'
 
-// Define the prop to receive the orderList
 const props = defineProps({
-  orderList: Array, // Make sure it's passed as an object
-  produktList: Array
+    orderList: Object,
+    statusList: Array,
+    filters: Object,
 });
 
+const goToPage = (url) => {
+    if (!url) return;
 
-const form = useForm({
-    Produkts: [],
-});
-
-const submit = () => {
-    form.post(route('order.store'), {
-        onSuccess: () => form.reset(),
+    router.get(url, {}, {
+        preserveState: true,
+        preserveScroll: true,
     });
 };
 
-const AddProd = ref(0);
+const search = (event) => {
+    router.get(
+        route('order.index'),
+        {
+            search: event.target.value,
+        },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    );
+};
 
-const selectchange = () =>
-{
+const status = (event) => {
+    router.get(
+        route('order.index'),
+        {
+            status: event.target.value,
+        },
+        {
+            preserveState: true,
+            replace: true,
+        }
+    );
+};
 
-    let produkt = props.produktList.find(x => x.id == AddProd.value)
+const sortBy = (column) => {
+    let direction = 'asc';
 
-    form.Produkts.push(produkt);
+    if (props.filters?.sort === column) {
+        direction = props.filters.direction === 'asc' ? 'desc' : 'asc';
+    }
 
-    AddProd.value = 0
+    router.get(
+        route('order.index'),
+        {
+            search: props.filters?.search,
+            sort: column,
+            direction: direction,
+            per_page: props.filters?.per_page ?? 10,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+        }
+    );
+};
+
+const MakeNewOrder = () =>{
+    router.get(
+        route('order.create')
+    );
 }
-
-const deleteFromprodukt = (id) =>{
-
-    form.Produkts = form.Produkts.filter(x => x.id !== id);
-
-
-}
-
-const deleteFromOrder = (id) =>{
-
-    let OrderFrom = useForm({});
-
-    // Pass the order ID in the route
-    OrderFrom.delete(route('order.delete', { order: id }), {
-        onSuccess: () => OrderFrom.reset(),
-    });
-
-}
-
-
 </script>
 
 <template>
-    <Head title="order" />
+    <Head title="Orders" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
-            order
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                Orders
             </h2>
         </template>
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-5"
-                >
+                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-5">
 
-                <div class="overflow-x-auto flex justify-center"><Label class="text-xl">Orders</Label></div>
+                    <div class="flex justify-center mb-6">
+                        <Label class="text-xl">Orders</Label>
+                    </div>
 
-                    <div class="overflow-x-auto flex justify-center">
+                    <!-- Search -->
+                    <div class="mb-4 flex">
+                        <input
+                            type="text"
+                            placeholder="Search name, email or phone..."
+                            :value="filters?.search ?? ''"
+                            @input="search"
+                            class="border-gray-300 rounded-md shadow-sm w-full max-w-md"
+                        />
 
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 py-2 border text-center"><Label>id</Label></th>
-                                        <th class="px-4 py-2 border text-center"><Label>total price</Label></th>
-                                        <th class="px-4 py-2 border text-center"><Label>total produkt</Label></th>
-                                        <th class="px-4 py-2 border text-center"><Label>show</Label></th>
-                                        <th class="px-4 py-2 border text-center"><Label>Delete</Label></th>
+                        <div class="ml-5 border-gray-300 rounded-md shadow-sm w-full max-w-md">
+                            <Label>Status</Label>
+                            <select v-model="filters.status" @change="status" class="border rounded px-2 py-1 w-full">
+                                <option key="all" value="all" selected>All</option>
+                                <option v-for="status in statusList" :key="status.Id" :value="status.Id">{{ status.Name }}</option>
+                            </select>
+                        </div>
 
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    <tr v-for="itme in orderList">
-                                        <td class="px-4 py-2 border text-center"><Label>{{itme.id}}</Label></td>
-                                        <td class="px-4 py-2 border text-center"><Label>{{itme.total_price}}</Label></td>
-                                        <td class="px-4 py-2 border text-center"><Label>{{itme.products.length}}</Label></td>
-                                        <td class="px-4 py-2 border text-center"><Label> <a :href="route('order.show',{ order: itme.id })">Show order</a></Label></td>
-                                        <td @click="deleteFromOrder(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
-
-
-                                    </tr>
-                                </tbody>
-
-                            </table>
-
-
+                        <div class="mt-4 flex justify-end">
+                            <PrimaryButton
+                                class="ms-4"
+                                @click="MakeNewOrder"
+                            >
+                                Make new order
+                            </PrimaryButton>
+                        </div>
 
                     </div>
 
-                </div>
-
-                <div
-                    class="bg-white shadow-sm sm:rounded-lg mt-5 h-96 p-5"
-                >
-
-                <div class="overflow-x-auto flex justify-center"><Label class="text-xl">make Order</Label></div>
-
-                <div class="overflow-x-auto flex justify-center">
-
-                    <select v-model="AddProd" @change="selectchange">
-                        <option value="0" disabled selected hidden>add a produkt</option>
-                        <option v-for="produkt in produktList" :value="produkt.id">{{ produkt.name }}</option>
-                    </select>
-                </div>
 
 
-                <div class="overflow-x-auto flex justify-center">
-                    <form @submit.prevent="submit">
+                    <!-- Table -->
+                    <div class="overflow-x-auto">
 
-                        <table>
+                        <table class="w-full border-collapse">
                             <thead>
                                 <tr>
-                                    <th class="px-4 py-2 border text-center"><Label>name</Label></th>
-                                    <th class="px-4 py-2 border text-center"><Label>price</Label></th>
-                                    <th class="px-4 py-2 border text-center"><Label>Delete</Label></th>
+                                    <th
+                                        class="px-4 py-2 border text-center cursor-pointer"
+                                        @click="sortBy('name')"
+                                    >
+                                        Name
+                                        <span v-if="filters?.sort === 'name'">
+                                            {{ filters.direction === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
+
+                                    <th
+                                        class="px-4 py-2 border text-center cursor-pointer"
+                                        @click="sortBy('email')"
+                                    >
+                                        Email
+                                        <span v-if="filters?.sort === 'email'">
+                                            {{ filters.direction === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
+
+
+
+                                    <th
+                                        class="px-4 py-2 border text-center cursor-pointer"
+                                        @click="sortBy('phone')"
+                                    >
+                                        Phone
+                                        <span v-if="filters?.sort === 'phone'">
+                                            {{ filters.direction === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
+
+                                    <th class="px-4 py-2 border text-center">
+                                        status
+                                    </th>
+
+
+                                    <th
+                                        class="px-4 py-2 border text-center cursor-pointer"
+                                        @click="sortBy('total_price')"
+                                    >
+                                        Total price
+                                        <span v-if="filters?.sort === 'total_price'">
+                                            {{ filters.direction === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
+
+                                    <th
+                                        class="px-4 py-2 border text-center cursor-pointer"
+                                        @click="sortBy('updated_at')"
+                                    >
+                                        Last updated
+                                        <span v-if="filters?.sort === 'updated_at'">
+                                            {{ filters.direction === 'asc' ? '↑' : '↓' }}
+                                        </span>
+                                    </th>
+
+                                    <th class="px-4 py-2 border text-center">
+                                        Show
+                                    </th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <tr v-for="itme in form.Produkts">
-                                    <td class="px-4 py-2 border text-center"><Label>{{itme.name}}</Label></td>
-                                    <td class="px-4 py-2 border text-center"><Label>{{itme.price}}</Label></td>
-                                    <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
+                                <tr
+                                    v-for="item in orderList.data"
+                                    :key="item.id"
+                                >
+                                    <td class="px-4 py-2 border text-center">
+                                        <Label>{{ item.name }}</Label>
+                                    </td>
+
+                                    <td class="px-4 py-2 border text-center">
+                                        <Label>{{ item.email }}</Label>
+                                    </td>
+
+                                    <td class="px-4 py-2 border text-center">
+                                        <Label>{{ item.phone }}</Label>
+                                    </td>
+
+                                    <td class="px-4 py-2 border text-center">
+                                        <Label>{{ item.status }}</Label>
+                                    </td>
+
+                                    <td class="px-4 py-2 border text-center">
+                                        <Label>{{ item.total_price }}</Label>
+                                    </td>
+
+                                    <td class="px-4 py-2 border text-center">
+                                        <Label>{{ FormatDato(item.updated_at) }}</Label>
+                                    </td>
+
+                                    <td class="px-4 py-2 border text-center">
+                                        <a
+                                            :href="route('order.show', {
+                                                order: item.id
+                                            })"
+                                            class="text-blue-600 hover:underline"
+                                        >
+                                            Show order
+                                        </a>
+                                    </td>
+                                </tr>
+
+                                <tr v-if="orderList.data.length === 0">
+                                    <td
+                                        colspan="7"
+                                        class="px-4 py-6 border text-center"
+                                    >
+                                        No orders found.
+                                    </td>
                                 </tr>
                             </tbody>
+                        </table>
 
-                            </table>
+                    </div>
 
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-6">
+                        <div class="flex gap-1">
+                            <button
+                                v-for="link in orderList.links"
+                                :key="link.label"
+                                @click="goToPage(link.url)"
+                                :disabled="!link.url"
+                                v-html="link.label"
+                                class="px-3 py-2 border rounded"
+                                :class="{
+                                    'bg-gray-200': link.active,
+                                    'opacity-50 cursor-not-allowed': !link.url
+                                }"
+                            />
+                        </div>
+                    </div>
 
-                        <PrimaryButton>Make</PrimaryButton>
-                    </form>
                 </div>
-
-
-
-
-
-
-                </div>
-
-
             </div>
         </div>
     </AuthenticatedLayout>
