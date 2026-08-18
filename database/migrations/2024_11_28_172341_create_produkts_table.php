@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->text("name");
-            $table->integer("prise");
+            $table->integer("price");
             $table->text("descript");
         });
     }
