@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\OrderProdukt;
 use App\Enum\OrderStatus;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Order extends Model
 {
@@ -30,6 +31,13 @@ class Order extends Model
     protected $casts = [
         'status' => OrderStatus::class
     ];
+
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['*']);
+    }
 
     // A single order belongs to a single user (one-to-many)
     public function user(): BelongsTo

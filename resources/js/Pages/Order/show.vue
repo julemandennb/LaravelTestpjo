@@ -35,7 +35,7 @@ const form = useForm({
 });
 
 const IsDone = computed(() =>
-    ['shipped', 'completed', 'cancelled'].includes(form.status)
+    ['shipped', 'completed', 'cancelled'].includes(props.order.status)
 );
 
 const deleteFromprodukt = (id,produktID) =>{
