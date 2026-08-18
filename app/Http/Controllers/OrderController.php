@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Order\CreateOrderAction;
+use App\Actions\Order\UpdateOrderAction;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\Produkt;
 use App\Enum\OrderStatus;
+use App\Models\OrderProdukt;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
-
+use Spatie\LaravelData\Optional;
 
 class OrderController extends Controller
 {
@@ -113,7 +115,11 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order->load([
-            'products',
+            'products' => function ($query) {
+
+             $query->select('order_produkts.id','quantity', 'name','order_produkts.price');
+
+            },
             'user' => function ($query) {
                 $query->select('id', 'name'); // Always include the `id` to maintain relationships
             },
@@ -134,52 +140,15 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order, UpdateOrderAction $updateOrderAction)
     {
 
-        $produkts = $request->input('Produkts');
+        $updateOrderAction->execute(
+            orderData: $request->dto(),
+            order:$order
+        );
 
-        $newProduktIds = collect($produkts)->pluck('id')->toArray();
-
-        $oldprodukts = $order->products;
-
-        $toRemove = $oldprodukts->whereNotIn('id', $newProduktIds)->pluck('id');
-
-
-        $order->products()->detach($toRemove);
-
-
-        $totalPrice = 0;
-
-
-        foreach ($produkts as $produkt) {
-
-            $productId = $produkt['id'];
-
-
-            $product = Produkt::find($productId);
-
-            if ($product) {
-
-                $existingProduct = $order->products()->where('produkt_id', $productId)->first();
-
-                if ($existingProduct) {
-
-                    $quantity = $existingProduct->pivot->quantity + 1;
-                    $order->products()->updateExistingPivot($productId, ['quantity' => $quantity]);
-                } else {
-
-                    $order->products()->attach($productId, ['quantity' => 1, 'price' => $product->price]);
-                }
-                $totalPrice += $product->price;
-            }
-        }
-
-        $order->total_price = $totalPrice;
-
-        $order->save();
-
-        return response()->noContent(200);
+        return redirect()->route('order.index');
     }
 
     /**

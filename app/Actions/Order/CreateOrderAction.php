@@ -3,8 +3,10 @@ namespace App\Actions\Order;
 
 use App\Dto\Order\OrderData;
 use App\Models\Order;
+use App\Models\OrderProdukt;
 use App\Models\Produkt;
 use Illuminate\Support\Facades\DB;
+use Spatie\LaravelData\Optional;
 
 class CreateOrderAction
 {
@@ -12,15 +14,6 @@ class CreateOrderAction
     {
         return DB::transaction(function () use ($userId, $orderData) {
 
-            $produkts = $orderData->products;
-            $quantities = collect($produkts)
-                ->groupBy('id')
-                ->map(fn ($items) => $items->count());
-
-            $productModels = Produkt::query()
-                ->whereIn('id', $quantities->keys())
-                ->get()
-                ->keyBy('id');
 
             $order = Order::create([
                 'user_id' => $userId,
@@ -34,24 +27,31 @@ class CreateOrderAction
             ]);
 
             $totalPrice = 0;
-            $pivotData = [];
 
-            foreach ($quantities as $productId => $quantity) {
-                $product = $productModels->get($productId);
 
-                if (! $product) {
+            foreach ($orderData->products as $produkt) {
+
+                if ($produkt->produktID instanceof Optional) {
                     continue;
                 }
 
-                $pivotData[$productId] = [
-                    'quantity' => $quantity,
-                    'price' => $product->price,
-                ];
+                $product = Produkt::find($produkt->produktID);
 
-                $totalPrice += $product->price * $quantity;
+                if (!$product) {
+                    continue;
+                }
+
+                // New product
+                OrderProdukt::create([
+                    'order_id' => $order->id,
+                    'produkt_id' => $product->id,
+                    'quantity' => $produkt->quantity,
+                    'price' => $product->price,
+                ]);
+
+                $totalPrice += $product->price * $produkt->quantity;
             }
 
-            $order->products()->attach($pivotData);
 
             $order->update([
                 'total_price' => $totalPrice,

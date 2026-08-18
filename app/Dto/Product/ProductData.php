@@ -10,9 +10,11 @@ class ProductData extends Data
 {
     public function __construct(
         public int|Optional $id,
+        public int|Optional $produktID,
         public string|Optional $name,
         public int|Optional  $price,
-        public string|Optional $descript
+        public string|Optional $descript,
+        public int|Optional $quantity
     ) {}
 
     public static function prepareForPipeline(array $properties): array

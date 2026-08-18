@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Dto\Order\OrderData;
+use Illuminate\Validation\Rule;
+use App\Enum\OrderStatus;
 
 class UpdateOrderRequest extends FormRequest
 {
@@ -21,8 +24,35 @@ class UpdateOrderRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'Produkts' => 'required|array', // Ensure each product ID is valid
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string|min:8|max:20',
+            'address' => 'required|string',
+            'postNr' => 'required|numeric|digits:4',
+            'status' => ['required', Rule::enum(OrderStatus::class)],
+            'products' => 'nullable|array', // Ensure each product ID is valid
+
+            'products.*.id' => [
+                'nullable',
+                'integer',
+            ],
+            'products.*.produktID' => [
+                'nullable',
+                'integer',
+                'exists:produkts,id',
+            ],
+            'products.*.quantity' => [
+                'nullable',
+                'integer',
+
+            ]
         ];
+    }
+
+    public function dto():OrderData
+    {
+        return OrderData::from($this->validated());
     }
 }

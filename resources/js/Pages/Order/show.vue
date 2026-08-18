@@ -1,12 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
-import { Head,useForm } from '@inertiajs/vue3';
+import { Head,useForm,router } from '@inertiajs/vue3';
 
 import FormatDato from '@/help/FormatDato.js'
 
 import Label from '@/Components/Label.vue'
+
 
 // Define the prop to receive the orderList
 const props = defineProps({
@@ -15,13 +16,15 @@ const props = defineProps({
   statusList: Array
 });
 
-console.log(props.order)
+console.log(props.order.products);
 
 const AddProd = ref(0);
-const IsDone = (props.order.status == "shipped" || props.order.status == "completed" || props.order.status == "cancelled" );
+
 
 const form = useForm({
-    Produkts: props.order.products,
+    products: props.order.products.map(product => ({
+    ...product
+    })),
 
     name : props.order.name,
     email:props.order.email,
@@ -31,33 +34,54 @@ const form = useForm({
     status: props.order.status
 });
 
-const deleteFromprodukt = (id) =>{
+const IsDone = computed(() =>
+    ['shipped', 'completed', 'cancelled'].includes(form.status)
+);
 
-    form.Produkts = form.Produkts.filter(x => x.id !== id);
+const deleteFromprodukt = (id,produktID) =>{
 
-    updata();
+    let idSearch = (id == null)
+
+    let formProducts = idSearch ? form.products.find(x => x.produktID == produktID) :  form.products.find(x => x.id == id);
+
+    if(formProducts.quantity == 1)
+        form.products =  idSearch ? form.products.filter(x => x.produktID !== produktID) : form.products.filter(x => x.id !== id);
+    else
+        formProducts.quantity --
+
+}
 
 
+const makeFormProdukt = (produkt) =>
+{
+    return {
+        name: produkt.name,
+        price:produkt.price,
+        quantity:  1,
+        produktID: produkt.id
+    }
 }
 
 const selectchange = () =>
 {
 
     let produkt = props.produktList.find(x => x.id == AddProd.value)
+    let formProducts = form.products.find(x => x.produktID == AddProd.value);
 
-    form.Produkts.push(produkt);
+    if(!formProducts)
+        form.products.push(makeFormProdukt(produkt));
+    else
+        formProducts.quantity++
 
     AddProd.value = 0
 
-    updata();
 }
 
 
 const updata = () => {
-    if(!IsDone)
-    form.put(route('order.update',{ order: props.order.id }), {
-        onSuccess: () => form.reset(),
-    });
+    if (!IsDone) return;
+
+    form.put(route('order.update', { order: props.order.id }));
 };
 
 
@@ -152,12 +176,18 @@ const updata = () => {
 
                     </div>
 
-                    <div class="overflow-x-auto flex justify-center"  >
-                        <PrimaryButton :disabled="IsDone"  @click="updata">opdate</PrimaryButton>
-                    </div>
+                    <div class="overflow-x-auto flex justify-center  mt-5"><Label class="text-xl">products</Label></div>
 
+                     <div class="overflow-x-auto flex justify-center"><Label class="text-xl">add new product</Label></div>
 
-                    <div class="overflow-x-auto flex justify-center  mt-5"><Label class="text-xl">product</Label></div>
+                        <div class="overflow-x-auto flex justify-center mb-5">
+
+                            <select v-model="AddProd" @change="selectchange">
+                                <option value="0" disabled selected hidden>add a produkt</option>
+                                <option v-for="produkt in produktList" :value="produkt.id">{{ produkt.name }} {{ produkt.price }}.KR</option>
+                            </select>
+                        </div>
+
 
                     <div class="overflow-x-auto flex justify-center">
 
@@ -169,26 +199,21 @@ const updata = () => {
                                 <th class="px-4 py-2 border text-center"><Label>Delete</Label></th>
                             </tr>
 
-                            <tr v-for="itme in form.Produkts">
+                            <tr v-for="itme in form.products">
                                 <td class="px-4 py-2 border text-center"><Label>{{itme.name}}</Label></td>
-                                <td class="px-4 py-2 border text-center"><Label>{{itme.pivot?.price ?? itme.price }}</Label></td>
-                                <td class="px-4 py-2 border text-center"><Label>{{itme.pivot?.quantity ?? 1}}</Label></td>
-                                <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
+                                <td class="px-4 py-2 border text-center"><Label>{{itme.price }}</Label></td>
+                                <td class="px-4 py-2 border text-center"><Label>{{itme.quantity}}</Label></td>
+                                <td @click="deleteFromprodukt(itme.id,itme.produktID)" class="px-4 py-2 border text-center"><Label>Delete</Label></td>
                             </tr>
 
                         </table>
 
                     </div>
 
-                        <div class="overflow-x-auto flex justify-center"><Label class="text-xl">add new product</Label></div>
+                     <div class="overflow-x-auto flex justify-center mt-5"  >
+                        <PrimaryButton :disabled="IsDone"  @click="updata">opdate</PrimaryButton>
+                    </div>
 
-                        <div class="overflow-x-auto flex justify-center">
-
-                            <select v-model="AddProd" @change="selectchange">
-                                <option value="0" disabled selected hidden>add a produkt</option>
-                                <option v-for="produkt in produktList" :value="produkt.id">{{ produkt.name }} {{ produkt.price }}.KR</option>
-                            </select>
-                        </div>
 
                 </div>
 

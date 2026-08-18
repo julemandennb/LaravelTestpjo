@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\OrderProdukt;
 use App\Enum\OrderStatus;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
 
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
-    use HasFactory;
+    use HasFactory,LogsActivity;
 
     protected $fillable = [
         'user_id', // foreign key to User
@@ -38,7 +40,30 @@ class Order extends Model
     // An order can have many products (many-to-many)
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Produkt::class, 'order_produkts', 'order_id', 'produkt_id')
-                    ->withPivot('quantity', 'price'); // You can also store the quantity and price in pivot table
+        return $this->belongsToMany(
+            Produkt::class,
+            'order_produkts',
+            'order_id',
+            'produkt_id'
+        )
+        ->using(OrderProdukt::class)
+        ->withPivot('id', 'quantity', 'price');
+    }
+
+    public function removeProductsExceptPivotIds($pivotIds): int
+    {
+        $query = OrderProdukt::where('order_id', $this->id);
+
+        if ($pivotIds->isNotEmpty()) {
+            $query->whereNotIn('id', $pivotIds);
+        }
+
+        $products = $query->get();
+
+        foreach ($products as $product) {
+            $product->delete();
+        }
+
+        return $products->count();
     }
 }

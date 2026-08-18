@@ -33,11 +33,16 @@ class StoreOrderRequest extends FormRequest
             'status' => ['required', Rule::enum(OrderStatus::class)],
             'products' => 'required|array',
 
-            'products.*.id' => [
+            'products.*.produktID' => [
                 'required',
                 'integer',
                 'exists:produkts,id',
             ],
+            'products.*.quantity' => [
+                'nullable',
+                'integer',
+
+            ]
         ];
     }
 

@@ -31,20 +31,39 @@ const submit = () => {
 
 const AddProd = ref(0);
 
+const makeFormProdukt = (produkt) =>
+{
+    return {
+        name: produkt.name,
+        price:produkt.price,
+        quantity:  1,
+        produktID: produkt.id
+    }
+}
+
 const selectchange = () =>
 {
 
     let produkt = props.produktList.find(x => x.id == AddProd.value)
+    let formProducts = form.products.find(x => x.produktID == AddProd.value);
 
-    form.products.push(produkt);
+    if(!formProducts)
+        form.products.push(makeFormProdukt(produkt));
+    else
+        formProducts.quantity++
 
     AddProd.value = 0
+
 }
 
 const deleteFromprodukt = (id) =>{
 
-    form.products = form.products.filter(x => x.id !== id);
+    let formProducts =  form.products.find(x => x.produktID == id);
 
+    if(formProducts.quantity == 1)
+        form.products = form.products.filter(x => x.produktID !== id)
+    else
+        formProducts.quantity --
 
 }
 
@@ -127,15 +146,17 @@ const deleteFromprodukt = (id) =>{
                                     <tr>
                                         <th class="px-4 py-2 border text-center"><Label>name</Label></th>
                                         <th class="px-4 py-2 border text-center"><Label>price</Label></th>
+                                        <th class="px-4 py-2 border text-center"><Label>quantity</Label></th>
                                         <th class="px-4 py-2 border text-center"><Label>Delete</Label></th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    <tr v-for="itme in form.products" :key="itme.id">
+                                    <tr v-for="itme in form.products" :key="itme.produktID">
                                         <td class="px-4 py-2 border text-center"><Label>{{ itme.name }}</Label></td>
                                         <td class="px-4 py-2 border text-center"><Label>{{ itme.price }}</Label></td>
-                                        <td @click="deleteFromprodukt(itme.id)" class="px-4 py-2 border text-center cursor-pointer"><Label>Delete</Label></td>
+                                        <td class="px-4 py-2 border text-center"><Label>{{itme.quantity}}</Label></td>
+                                        <td @click="deleteFromprodukt(itme.produktID)" class="px-4 py-2 border text-center cursor-pointer"><Label>Delete</Label></td>
                                     </tr>
                                 </tbody>
 
