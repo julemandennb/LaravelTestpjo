@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\LogName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,7 +37,16 @@ class Order extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);
+        ->useLogName(LogName::ORDER)
+        ->logOnly([
+            'status',
+            'total_price',
+            'name',
+            'email',
+            'phone',
+            'address',
+        ])
+        ->logOnlyDirty();
     }
 
     // A single order belongs to a single user (one-to-many)
