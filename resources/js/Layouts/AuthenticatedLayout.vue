@@ -52,6 +52,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                 Livechat
                                 </NavLink>
+                                <NavLink
+                                    :href="route('activityLog.index')"
+                                    :active="route().current('activityLog.index')"
+                                >
+                                activityLog
+                                </NavLink>
                             </div>
                         </div>
 
