@@ -16,8 +16,6 @@ const props = defineProps({
   statusList: Array
 });
 
-console.log(props.order.products);
-
 const AddProd = ref(0);
 
 
@@ -79,8 +77,6 @@ const selectchange = () =>
 
 
 const updata = () => {
-    if (!IsDone) return;
-
     form.put(route('order.update', { order: props.order.id }));
 };
 
@@ -164,7 +160,7 @@ const updata = () => {
 
                             <div>
                                 <Label>Status</Label>
-                                <select v-model="form.status" class="border rounded px-2 py-1 w-full" :disabled="IsDone">
+                                <select v-model="form.status" class="border rounded px-2 py-1 w-full">
                                     <option v-for="status in statusList" :key="status.Id" :value="status.Id">{{ status.Name }}</option>
                                 </select>
                                 <div v-if="form.errors.status" class="text-red-600 text-sm">{{ form.errors.status }}</div>
@@ -182,7 +178,7 @@ const updata = () => {
 
                         <div class="overflow-x-auto flex justify-center mb-5">
 
-                            <select v-model="AddProd" @change="selectchange">
+                            <select v-model="AddProd" @change="selectchange" :disabled="IsDone">
                                 <option value="0" disabled selected hidden>add a produkt</option>
                                 <option v-for="produkt in produktList" :value="produkt.id">{{ produkt.name }} {{ produkt.price }}.KR</option>
                             </select>
@@ -211,7 +207,7 @@ const updata = () => {
                     </div>
 
                      <div class="overflow-x-auto flex justify-center mt-5"  >
-                        <PrimaryButton :disabled="IsDone"  @click="updata">opdate</PrimaryButton>
+                        <PrimaryButton @click="updata">opdate</PrimaryButton>
                     </div>
 
 

@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use app\Enum\LogName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Produkt extends Model
 {
@@ -18,6 +20,18 @@ class Produkt extends Model
         'price',
         'descript'
     ];
+
+       public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->useLogName(LogName::PRODUKT)
+        ->logOnly([
+            'name',
+            'price',
+            'descript'
+        ])
+        ->logOnlyDirty();
+    }
 
     // A product can belong to many orders (many-to-many)
     public function orders() :BelongsToMany

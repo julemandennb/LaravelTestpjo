@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\LiveChatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -27,11 +28,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/token', [ProfileController::class, 'makeAToken'])->name('profile.makeAToken');
     Route::delete('/profile/token',[ProfileController::class, 'deleteAToken'])->name('profile.deleteAToken');
 
-   /* Route::get('/order', [OrderController::class, 'index'])->name('order.index');
-    Route::get('/order/show/{order}', [OrderController::class, 'show'])->name('order.show');
-    Route::put('/order/update/{order}', [OrderController::class, 'update'])->name('order.update');
-    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
-    Route::delete('/order/{order}', [OrderController::class, 'destroy'])->name('order.delete');*/
 
     Route::resource('/order', OrderController::class);
 
@@ -39,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/livechat/{user}',[LiveChatController::class, 'chat'])->name('livechat.chat');
     Route::post('/livechat/{user}',[LiveChatController::class, 'send'])->name('livechat.send');
 
+
+    Route::get('/ActivityLog' ,ActivityLogController::class)->name('activityLog.index');
 
 
 

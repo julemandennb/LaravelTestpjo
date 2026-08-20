@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use app\Enum\LogName;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
@@ -26,6 +27,7 @@ class OrderProdukt extends Pivot
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-        ->logOnly(['*']);
+        ->useLogName(LogName::ORDERPRODUKT)
+        ->logOnly(['*'])->logOnlyDirty();
     }
 }
