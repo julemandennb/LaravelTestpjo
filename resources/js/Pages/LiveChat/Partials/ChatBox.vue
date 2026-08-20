@@ -93,7 +93,7 @@ const echoFun = () =>{
 </script>
 
 <template>
-<div class="chat-container h-full flex flex-col">
+<div class="h-[45rem] flex flex-col">
     <div class="HoldMessage flex-grow overflow-y-auto p-5 ">
         <div class="border border-gray-200 h-full w-full">
 

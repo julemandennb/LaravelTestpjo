@@ -27,7 +27,7 @@ const sendId = (id) => {
 
     <h3>User</h3>
 
-    <div class="flex flex-col gap-4">
+    <div class="h-[45rem] overflow-y-auto flex flex-col gap-4 p-5">
 
         <div v-for="user in users" @click="sendId(user.id)" :class="{ 'bg-blue-500 text-white': user.id === userSelected }" class="cursor-pointer">
 
