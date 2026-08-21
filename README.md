@@ -65,7 +65,7 @@ Currently using:
 
 ## Running the project
 
-Start Docker:
+Start Docker and Reverb and npm:
 
 ```bash
 sail up -d

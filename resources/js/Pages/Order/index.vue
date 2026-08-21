@@ -197,7 +197,7 @@ const MakeNewOrder = () =>{
                             <tbody>
                                 <tr
                                     v-for="item in orderList.data"
-                                    :key="item.id"
+                                    :key="item.uuid"
                                 >
                                     <td class="px-4 py-2 border text-center">
                                         <Label>{{ item.name }}</Label>
@@ -226,7 +226,7 @@ const MakeNewOrder = () =>{
                                     <td class="px-4 py-2 border text-center">
                                         <a
                                             :href="route('order.show', {
-                                                order: item.id
+                                                order: item.uuid
                                             })"
                                             class="text-blue-600 hover:underline"
                                         >

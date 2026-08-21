@@ -29,14 +29,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/token',[ProfileController::class, 'deleteAToken'])->name('profile.deleteAToken');
 
 
-    Route::resource('/order', OrderController::class);
-
-    Route::get('/livechat',[LiveChatController::class, 'index'])->name('livechat.index');
-    Route::get('/livechat/{user}',[LiveChatController::class, 'chat'])->name('livechat.chat');
-    Route::post('/livechat/{user}',[LiveChatController::class, 'send'])->name('livechat.send');
 
 
-    Route::get('/ActivityLog' ,ActivityLogController::class)->name('activityLog.index');
+    Route::middleware('permission:orderDashboard')->resource('/order', OrderController::class);
+
+
+    Route::middleware('permission:livechatDashboard')->group(function () {
+        Route::get('/livechat',[LiveChatController::class, 'index'])->name('livechat.index');
+        Route::get('/livechat/{user}',[LiveChatController::class, 'chat'])->name('livechat.chat');
+        Route::post('/livechat/{user}',[LiveChatController::class, 'send'])->name('livechat.send');
+    });
+
+
+    Route::middleware('permission:activityLogDashboard')->get('/ActivityLog' ,ActivityLogController::class)->name('activityLog.index');
 
 
 
