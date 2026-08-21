@@ -11,6 +11,7 @@ use App\Models\OrderProdukt;
 use App\Enum\OrderStatus;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -30,8 +31,31 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'status' => OrderStatus::class
+        'status' => OrderStatus::class,
+        'uuid' => 'string',
     ];
+
+    /**
+     * Boot the model and assign a UUID to `uuid` on creating.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
+    /**
+     * Use `uuid` for route model binding instead of the default primary key.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 
 
     public function getActivitylogOptions(): LogOptions

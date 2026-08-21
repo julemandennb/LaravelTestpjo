@@ -29,7 +29,7 @@ class OrderController extends Controller
         $status = $request->input('status','all');
 
         $allowedSorts = [
-            'id',
+            'uuid',
             'name',
             'email',
             'phone',
@@ -47,7 +47,7 @@ class OrderController extends Controller
 
         $orderList = Order::query()
             ->select([
-                'id',
+                'uuid',
                 'total_price',
                 'name',
                 'email',

@@ -77,7 +77,7 @@ const selectchange = () =>
 
 
 const updata = () => {
-    form.put(route('order.update', { order: props.order.id }));
+    form.put(route('order.update', { order: props.order.uuid }));
 };
 
 
@@ -103,7 +103,7 @@ const updata = () => {
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-5"
                 >
 
-                <div class="overflow-x-auto flex justify-center"><Label class="text-xl">Order info {{ order.id }}</Label></div>
+                <div class="overflow-x-auto flex justify-center"><Label class="text-xl">Order info</Label></div>
 
                     <div class="overflow-x-auto flex justify-center mb-5">
 

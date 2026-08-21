@@ -10,14 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,SoftDeletes,HasApiTokens,LogsActivity;
+    /** @use HasFactory<\\Database\\Factories\\UserFactory> */
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens, LogsActivity, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -41,16 +43,36 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string,string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'uuid' => 'string',
+    ];
+
+    /**
+     * Boot the model and assign a UUID to the `uuid` column on creating.
+     */
+    protected static function boot(): void
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
+    /**
+     * Use `uuid` for route model binding instead of the default primary key.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
     }
 
     public function getActivitylogOptions(): LogOptions
