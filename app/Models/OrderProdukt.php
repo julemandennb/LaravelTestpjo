@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use app\Enum\LogName;
+use App\Enum\LogName;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;

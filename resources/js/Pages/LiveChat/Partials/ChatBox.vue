@@ -74,11 +74,13 @@ const echoFun = () =>{
         Echo.leave(channelName.value);
     }
 
-    channelName.value = `chat.${props.currentuser_id}`;
+channelName.value = `chat.${props.currentuser_id}`;
 
    broadcaster.value = Echo.private(`chat.${props.currentuser_id}`)
         .listen("MessageSent", (response) => {
 
+            console.log('response',response.sender_id);
+             console.log('user_id',user_id.value);
             if(response.sender_id !=  user_id.value)
             {
                 return;

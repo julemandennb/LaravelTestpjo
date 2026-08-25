@@ -36,10 +36,10 @@ const UserID = ref(0);
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg flex"
                 >
-                    <div class="w-1/4"><ListUser :users="users" @send-id="(id)=>{UserID = id}" /></div>
-                    
+                    <div class="w-1/4"><ListUser :users="users" @send-id="(uuid)=>{UserID = uuid}" /></div>
+
                     <div class="w-3/4"><ChatBox :user_id="UserID" :currentuser_id="currentuser_id"/></div>
-                    
+
                 </div>
             </div>
         </div>

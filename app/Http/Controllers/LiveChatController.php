@@ -13,7 +13,7 @@ class LiveChatController extends Controller
     public function index()
     {
 
-        $users = User::all()->where('id', '!=', auth()->id())->select('id', 'name', 'email');
+        $users = User::all()->where('id', '!=', auth()->id())->select('uuid', 'name', 'email');
 
         return Inertia::render('LiveChat/index',['users' => $users, 'currentuser_id' => auth()->id()]);
     }
