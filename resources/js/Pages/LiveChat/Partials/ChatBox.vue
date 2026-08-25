@@ -85,6 +85,7 @@ channelName.value = `chat.${props.currentuser_id}`;
             }
 
             messages.value.push(response);
+            axios.patch(`/livechat/message/${response.id}/seen`);
 
         })
 }

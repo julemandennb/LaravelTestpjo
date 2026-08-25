@@ -39,6 +39,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/livechat',[LiveChatController::class, 'index'])->name('livechat.index');
         Route::get('/livechat/{user}',[LiveChatController::class, 'chat'])->name('livechat.chat');
         Route::post('/livechat/{user}',[LiveChatController::class, 'send'])->name('livechat.send');
+
+        Route::patch('/livechat/message/{message}/seen', [
+            LiveChatController::class,
+            'markAsSeen',
+        ])->name('livechat.message.seen');
     });
 
 

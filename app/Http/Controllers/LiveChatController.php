@@ -46,8 +46,6 @@ class LiveChatController extends Controller
 
     public function send(User $user)
     {
-
-
         $message = ChatMessage::create([
             'sender_id' => auth()->id(),
             'receiver_id' => $user->id,
@@ -57,5 +55,14 @@ class LiveChatController extends Controller
         broadcast(new MessageSent($message));
 
         return $message;
+    }
+
+    public function markAsSeen(ChatMessage $message)
+    {
+        abort_unless($message->receiver_id === auth()->id(), 403);
+
+        $message->update(['seen' => true]);
+
+        return response()->json(['seen' => true]);
     }
 }
