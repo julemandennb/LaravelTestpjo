@@ -56,7 +56,13 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('activityLog.index')"
                                     :active="route().current('activityLog.index')"
                                 >
-                                activityLog
+                                ActivityLog
+                                </NavLink>
+                                <NavLink
+                                    :href="route('developerDashboard.index')"
+                                    :active="route().current('developerDashboard.index')"
+                                >
+                                    Developer dashboard
                                 </NavLink>
                             </div>
                         </div>
