@@ -20,7 +20,7 @@ class LiveChatController extends Controller
 
     public function chat(User $user)
     {
-        return ChatMessage::query()
+        $ChatMessages = ChatMessage::query()
         ->where(function ($query) use ($user) {
             $query->where('sender_id', auth()->id())
                 ->where('receiver_id', $user->id);
@@ -32,10 +32,21 @@ class LiveChatController extends Controller
         ->with(['sender', 'receiver'])
         ->orderBy('id', 'asc')
         ->get();
+
+        ChatMessage::query()
+            ->where('sender_id', $user->id)
+            ->where('receiver_id', auth()->id())
+            ->where('seen',0)
+            ->update(['seen' => 1]);
+
+
+
+        return $ChatMessages;
     }
 
     public function send(User $user)
     {
+
 
         $message = ChatMessage::create([
             'sender_id' => auth()->id(),
