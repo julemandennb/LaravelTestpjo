@@ -30,6 +30,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'last_login'
     ];
 
     /**
@@ -51,6 +52,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'uuid' => 'string',
+         'last_login' => 'datetime',
     ];
 
     /**
@@ -93,8 +95,27 @@ class User extends Authenticatable
     }
 
     // A user can have many messages (one-to-many)
-    public function messages(): HasMany
+    public function sentMessages(): HasMany
     {
-        return $this->hasMany(ChatMessage::class);
+        return $this->hasMany(ChatMessage::class, 'sender_id');
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(ChatMessage::class, 'receiver_id');
+    }
+
+   public function scopeMostActive($query, int $limit = 10)
+    {
+        return $query
+            ->withCount([
+                'orders',
+                'sentMessages',
+                'receivedMessages',
+            ])
+            ->orderByRaw(
+                '(orders_count + sent_messages_count + received_messages_count) DESC'
+            )
+            ->limit($limit);
     }
 }

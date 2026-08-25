@@ -74,7 +74,7 @@ const echoFun = () =>{
         Echo.leave(channelName.value);
     }
 
-    channelName.value = `chat.${props.currentuser_id}`;
+channelName.value = `chat.${props.currentuser_id}`;
 
    broadcaster.value = Echo.private(`chat.${props.currentuser_id}`)
         .listen("MessageSent", (response) => {
@@ -85,6 +85,7 @@ const echoFun = () =>{
             }
 
             messages.value.push(response);
+            axios.patch(`/livechat/message/${response.id}/seen`);
 
         })
 }

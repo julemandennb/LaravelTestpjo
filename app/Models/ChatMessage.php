@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ChatMessage extends Model
@@ -30,9 +31,19 @@ class ChatMessage extends Model
         return $this->belongsTo(User::class, 'sender_id');
     }
 
-    public function havNotSeen()
+    public function sentMessages(): HasMany
     {
-        return $this->where('receiver_id', $this->id)->where('seen', 0)->count();
+        return $this->hasMany(ChatMessage::class, 'sender_id');
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(ChatMessage::class, 'receiver_id');
+    }
+
+    public function havNotSeen(User $receiver)
+    {
+        return $this->where('receiver_id', $receiver->id)->where('seen', 0)->count();
     }
 
 

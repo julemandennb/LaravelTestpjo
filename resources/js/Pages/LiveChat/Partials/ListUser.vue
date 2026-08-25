@@ -10,11 +10,11 @@ const props = defineProps({
 
 const userSelected = ref(null);
 
-//onclick event sendt id to parent
-const sendId = (id) => {
-    userSelected.value = id;
-    //emit the id to the parent
-    emit('sendId', id)
+//onclick event sendt uuid to parent
+const sendId = (uuid) => {
+    userSelected.value = uuid;
+    //emit the uuid to the parent
+    emit('sendId', uuid)
 }
 
 
@@ -29,7 +29,7 @@ const sendId = (id) => {
 
     <div class="h-[45rem] overflow-y-auto flex flex-col gap-4 p-5">
 
-        <div v-for="user in users" @click="sendId(user.id)" :class="{ 'bg-blue-500 text-white': user.id === userSelected }" class="cursor-pointer">
+        <div v-for="user in users" @click="sendId(user.uuid)" :class="{ 'bg-blue-500 text-white': user.uuid === userSelected }" class="cursor-pointer">
 
             <div class="text-lg">{{ user.name }}</div>
             <div class="text-sm">{{ user.email }}</div>
