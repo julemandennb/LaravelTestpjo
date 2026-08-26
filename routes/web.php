@@ -5,6 +5,7 @@ use App\Http\Controllers\StatisticsDashboardController;
 use App\Http\Controllers\LiveChatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServerHealthController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,7 +52,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:statisticsDashboard')->get('/statisticsDashboard' ,StatisticsDashboardController::class)->name('statisticsDashboard.index');
 
-
+    Route::middleware('permission:serverHealth')->get('/serverHealth' ,ServerHealthController::class)->name('ServerHealth.index');
+//
 
 
 });

@@ -68,6 +68,12 @@ class RoleSeeder extends Seeder
             ['display' => 'Developer Dashboard']
         );
 
+        //superadmin
+        $serverHealth = Permission::firstOrCreate(
+            ['name' => 'serverHealth'],
+            ['display' => 'Server Health']
+        );
+
         /*
         |--------------------------------------------------------------------------
         | Roles
@@ -129,6 +135,7 @@ class RoleSeeder extends Seeder
                     $activityLogDashboard,
                     $userDashboard,
                     $statisticsDashboard,
+                    $serverHealth
                 ],
             ],
         ];
