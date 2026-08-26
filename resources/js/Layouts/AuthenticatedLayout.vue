@@ -64,6 +64,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Statistics dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('ServerHealth.index')"
+                                    :active="route().current('ServerHealth.index')"
+                                >
+                                    Server health
+                                </NavLink>
                             </div>
                         </div>
 
