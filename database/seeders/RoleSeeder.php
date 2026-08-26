@@ -63,8 +63,8 @@ class RoleSeeder extends Seeder
             ['display' => 'User dashboard']
         );
 
-        $developerDashboard = Permission::firstOrCreate(
-            ['name' => 'developerDashboard'],
+        $statisticsDashboard = Permission::firstOrCreate(
+            ['name' => 'statisticsDashboard'],
             ['display' => 'Developer Dashboard']
         );
 
@@ -113,7 +113,7 @@ class RoleSeeder extends Seeder
                     $produktDashboard,
                     $activityLogDashboard,
                     $userDashboard,
-                    $developerDashboard,
+                    $statisticsDashboard,
                 ],
             ],
 
@@ -128,7 +128,7 @@ class RoleSeeder extends Seeder
                     $produktDashboard,
                     $activityLogDashboard,
                     $userDashboard,
-                    $developerDashboard,
+                    $statisticsDashboard,
                 ],
             ],
         ];

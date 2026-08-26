@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\DeveloperDashboardController;
+use App\Http\Controllers\StatisticsDashboardController;
 use App\Http\Controllers\LiveChatController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('permission:activityLogDashboard')->get('/activityLog' ,ActivityLogController::class)->name('activityLog.index');
 
-    Route::middleware('permission:developerDashboard')->get('/developerDashboard' ,DeveloperDashboardController::class)->name('developerDashboard.index');
+    Route::middleware('permission:statisticsDashboard')->get('/statisticsDashboard' ,StatisticsDashboardController::class)->name('statisticsDashboard.index');
 
 
 

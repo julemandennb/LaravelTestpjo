@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 
 
-class DeveloperDashboardController extends Controller
+class StatisticsDashboardController extends Controller
 {
     public function __invoke(Request $request)
     {
@@ -37,7 +37,7 @@ class DeveloperDashboardController extends Controller
         ])->count();
         $totalCompletedOrder = Order::where('status', OrderStatus::COMPLETED)->count();
 
-        return Inertia::render('DeveloperDashboard/index', [
+        return Inertia::render('StatisticsDashboard/index', [
             'totalUsers' => $totalUsers,
             'get5LastUser' => $get5LastUser,
             'activeUsers' => $activeUsers,

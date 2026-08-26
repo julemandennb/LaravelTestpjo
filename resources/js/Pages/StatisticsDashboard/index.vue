@@ -48,12 +48,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="DeveloperDashboard" />
+    <Head title="StatisticsDashboard" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                Developer Dashboard
+                Statistics Dashboard
             </h2>
         </template>
 
@@ -62,7 +62,7 @@ onUnmounted(() => {
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg p-5">
 
                     <div class="flex justify-center mb-6">
-                        <Label class="text-xl">Developer Dashboard</Label>
+                        <Label class="text-xl">Statistics Dashboard</Label>
                     </div>
 
                     <div class="flex justify-center flex-col ">
