@@ -78,10 +78,12 @@ const selectchange = () =>
 
 
 const updata = () => {
-    form.put(route('order.update', { order: props.order.uuid }));
+    form.put(route('order.destroy', { order: props.order.uuid }));
 };
 
 const deleteItme = () =>{
+
+    form.delete(route('order.destroy',{ order: props.order.uuid }));
 
 }
 
