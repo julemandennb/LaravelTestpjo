@@ -15,7 +15,7 @@ class LiveChatController extends Controller
 
         $users = User::all()->where('id', '!=', auth()->id())->select('uuid', 'name', 'email');
 
-        return Inertia::render('LiveChat/index',['users' => $users, 'currentuser_id' => auth()->id()]);
+        return Inertia::render('LiveChat/index',['users' => $users, 'currentuser_id' => auth()->user()->uuid]);
     }
 
     public function chat(User $user)
@@ -41,7 +41,7 @@ class LiveChatController extends Controller
 
 
 
-        return $ChatMessages;
+        return $ChatMessages->map(fn (ChatMessage $message) => $this->formatMessage($message));
     }
 
     public function send(User $user)
@@ -54,7 +54,7 @@ class LiveChatController extends Controller
 
         broadcast(new MessageSent($message));
 
-        return $message;
+        return $this->formatMessage($message);
     }
 
     public function markAsSeen(ChatMessage $message)
@@ -64,5 +64,17 @@ class LiveChatController extends Controller
         $message->update(['seen' => true]);
 
         return response()->json(['seen' => true]);
+    }
+
+    private function formatMessage(ChatMessage $message): array
+    {
+        $message->loadMissing(['sender', 'receiver']);
+
+        return [
+            'id' => $message->id,
+            'sender_id' => $message->sender->uuid,
+            'receiver_id' => $message->receiver->uuid,
+            'text' => $message->text,
+        ];
     }
 }

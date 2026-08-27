@@ -6,8 +6,8 @@ import axios from 'axios';
 
 
 const props = defineProps({
-  user_id: Number,
-  currentuser_id: Number
+    user_id: String,
+    currentuser_id: String
 });
 
 const user_id = ref(props.user_id)
@@ -74,12 +74,12 @@ const echoFun = () =>{
         Echo.leave(channelName.value);
     }
 
-channelName.value = `chat.${props.currentuser_id}`;
+    channelName.value = `chat.${props.currentuser_id}`;
 
    broadcaster.value = Echo.private(`chat.${props.currentuser_id}`)
         .listen("MessageSent", (response) => {
 
-            if(response.sender_id !=  user_id.value)
+            if(response.sender_id !== user_id.value)
             {
                 return;
             }
@@ -105,8 +105,9 @@ channelName.value = `chat.${props.currentuser_id}`;
                     :key="message.id"
                     class="flex items-center mb-2"
                 >
+
                     <div
-                        v-if="message.sender_id === currentuser_id"
+                        v-if="message.sender_id === props.currentuser_id"
                         class="p-2 ml-auto text-white bg-blue-500 rounded-lg"
                     >
                         {{ message.text }}

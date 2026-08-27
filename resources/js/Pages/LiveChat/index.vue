@@ -9,10 +9,10 @@ import ChatBox from './Partials/ChatBox.vue';
 // Define the prop to receive the orderList
 const props = defineProps({
   users: Array, // Make sure it's passed as an object
-  currentuser_id: Number
+    currentuser_id: String
 });
 
-const UserID = ref(0);
+const UserID = ref('');
 
 
 </script>
