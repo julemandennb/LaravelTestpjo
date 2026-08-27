@@ -52,6 +52,11 @@ class RoleSeeder extends Seeder
             ['display' => 'Produkt dashboard']
         );
 
+        $canGetAllOrderChat = Permission::firstOrCreate(
+            ['name' => 'canGetAllOrderChat'],
+            ['display' => 'Can get all order chat']
+        );
+
         // admin, superadmin
         $activityLogDashboard = Permission::firstOrCreate(
             ['name' => 'activityLogDashboard'],
@@ -105,6 +110,7 @@ class RoleSeeder extends Seeder
                     $orderDashboard,
                     $livechatDashboard,
                     $produktDashboard,
+                    $canGetAllOrderChat,
                 ],
             ],
 
@@ -120,6 +126,7 @@ class RoleSeeder extends Seeder
                     $activityLogDashboard,
                     $userDashboard,
                     $statisticsDashboard,
+                    $canGetAllOrderChat,
                 ],
             ],
 
@@ -135,7 +142,8 @@ class RoleSeeder extends Seeder
                     $activityLogDashboard,
                     $userDashboard,
                     $statisticsDashboard,
-                    $serverHealth
+                    $serverHealth,
+                    $canGetAllOrderChat,
                 ],
             ],
         ];
