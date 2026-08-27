@@ -7,6 +7,7 @@ import { Head,useForm,router } from '@inertiajs/vue3';
 import FormatDato from '@/help/FormatDato.js'
 
 import Label from '@/Components/Label.vue'
+import DangerButton from '@/Components/DangerButton.vue';
 
 
 // Define the prop to receive the orderList
@@ -80,6 +81,9 @@ const updata = () => {
     form.put(route('order.update', { order: props.order.uuid }));
 };
 
+const deleteItme = () =>{
+
+}
 
 
 
@@ -208,6 +212,7 @@ const updata = () => {
 
                      <div class="overflow-x-auto flex justify-center mt-5"  >
                         <PrimaryButton @click="updata">opdate</PrimaryButton>
+                        <DangerButton class="ml-5" @click="deleteItme">Delete</DangerButton>
                     </div>
 
 

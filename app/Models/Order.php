@@ -12,7 +12,10 @@ use App\Enum\OrderStatus;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 use Illuminate\Support\Str;
+use App\Observers\OrderObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy(OrderObserver::class)]
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */

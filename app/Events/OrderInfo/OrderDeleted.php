@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\OrderInfo;
 
 use App\Models\Order;
 use Illuminate\Broadcasting\Channel;
@@ -8,10 +8,11 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderDeleted
+class OrderDeleted implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -40,7 +41,7 @@ class OrderDeleted
     /**
      * The model event's broadcast name.
      */
-    public function broadcastAs(string $event): string|null
+    public function broadcastAs(): string|null
     {
         return "OrderInfo";
     }

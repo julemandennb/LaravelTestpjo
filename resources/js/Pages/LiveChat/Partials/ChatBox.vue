@@ -78,7 +78,6 @@ const echoFun = () =>{
 
     const fun = (response) => {
 
-        console.log(response.sender_id , user_id.value)
         if(response.sender_id !== user_id.value)
         {
             return;

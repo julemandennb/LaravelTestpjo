@@ -2,6 +2,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { Head } from '@inertiajs/vue3';
+import Broadcaster from '@/help/Broadcaster';
+import DashboardInfoBoxLive from '@/Components/DashboardInfoBoxLive.vue';
+
+
+
 </script>
 
 <template>
@@ -21,9 +26,9 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
-                   hop hop
+                   <DashboardInfoBoxLive/>
 
-                    
+
                 </div>
             </div>
         </div>
