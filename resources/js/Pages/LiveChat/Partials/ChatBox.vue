@@ -3,6 +3,7 @@ import { watch } from 'vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { computed, onMounted, onUnmounted, ref,nextTick  } from 'vue';
 import axios from 'axios';
+import Broadcaster from '@/help/Broadcaster';
 
 
 const props = defineProps({
@@ -17,7 +18,7 @@ const messages = ref([]);
 
 const messagesContainer = ref(null);
 
-const broadcaster = ref(null);
+const broadcaster = new Broadcaster()
 const channelName = ref(null);
 
 
@@ -38,7 +39,6 @@ const sendMessage = () => {
         message: TextToSend.value
       })
       .then(response => {
-        console.log('Message sent:', response.data);
         TextToSend.value = '';
         messages.value.push(response.data);
       })
@@ -50,7 +50,6 @@ const sendMessage = () => {
 const getmessages = () => {
     axios.get(`/livechat/${user_id.value}`)
       .then(response => {
-        console.log('Messages:', response.data);
         messages.value = response.data;
       })
       .catch(error => {
@@ -70,24 +69,28 @@ const scrollToBottom = async () => {
 
 const echoFun = () =>{
 
+
     if (channelName.value) {
-        Echo.leave(channelName.value);
+        broadcaster.leave(channelName.value)
     }
 
     channelName.value = `chat.${props.currentuser_id}`;
 
-   broadcaster.value = Echo.private(`chat.${props.currentuser_id}`)
-        .listen("MessageSent", (response) => {
+    const fun = (response) => {
 
-            if(response.sender_id !== user_id.value)
-            {
-                return;
-            }
+        console.log(response.sender_id , user_id.value)
+        if(response.sender_id !== user_id.value)
+        {
+            return;
+        }
 
-            messages.value.push(response);
-            axios.patch(`/livechat/message/${response.id}/seen`);
+        messages.value.push(response);
+        axios.patch(`/livechat/message/${response.id}/seen`);
 
-        })
+    }
+
+    broadcaster.privateChannel(channelName.value,"MessageSent",fun)
+
 }
 
 
