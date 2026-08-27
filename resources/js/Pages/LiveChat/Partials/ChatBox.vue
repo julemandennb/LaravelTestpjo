@@ -89,7 +89,7 @@ const echoFun = () =>{
 
     }
 
-    broadcaster.privateChannel(channelName.value,"MessageSent",fun)
+    broadcaster.privateChannel(channelName.value,".MessageSent",fun)
 
 }
 

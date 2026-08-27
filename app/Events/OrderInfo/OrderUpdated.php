@@ -11,14 +11,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderInfo
+class OrderUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Order $order,public string $text)
+    public function __construct(public Order $order)
     {
         //
     }
@@ -37,12 +37,20 @@ class OrderInfo
         ];
     }
 
+    /**
+     * The model event's broadcast name.
+     */
+    public function broadcastAs(string $event): string|null
+    {
+        return "OrderInfo";
+    }
+
     public function broadcastWith()
     {
         return [
             'id' => $this->order->uuid,
             'status' => $this->order->status,
-            'text' => $this->text
+            'text' => "order has be update."
         ];
     }
 }
