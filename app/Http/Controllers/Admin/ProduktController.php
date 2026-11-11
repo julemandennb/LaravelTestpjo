@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProduktRequest;
 use App\Http\Requests\UpdateProduktRequest;
 use App\Models\Produkt;
+use GuzzleHttp\Psr7\Request;
 
 class ProduktController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
     }

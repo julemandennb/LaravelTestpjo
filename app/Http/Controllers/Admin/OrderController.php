@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\Order\CreateOrderAction;
 use App\Actions\Order\UpdateOrderAction;
+use App\Actions\Orders\GetOrderListAction;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\Order;
 use App\Models\Produkt;
 use App\Enum\OrderStatus;
+use App\Http\Controllers\Controller;
 use App\Models\OrderProdukt;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -19,67 +21,11 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
+   public function index(Request $request,GetOrderListAction $action)
     {
-        $perPage = min((int) $request->input('per_page', 10), 100);
-
-        $search = $request->input('search');
-        $sort = $request->input('sort', 'updated_at');
-        $direction = $request->input('direction', 'desc');
-        $status = $request->input('status','all');
-
-        $allowedSorts = [
-            'uuid',
-            'name',
-            'email',
-            'phone',
-            'total_price',
-            'updated_at',
-        ];
-
-        if (!in_array($sort, $allowedSorts)) {
-            $sort = 'updated_at';
-        }
-
-        if (!in_array($direction, ['asc', 'desc'])) {
-            $direction = 'desc';
-        }
-
-        $orderList = Order::query()
-            ->select([
-                'uuid',
-                'total_price',
-                'name',
-                'email',
-                'phone',
-                'updated_at',
-                'status'
-            ])
-            ->when($status, function($query, $status){
-                if($status !="all")
-                    $query->where('status',$status);
-            })
-            ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('phone', 'like', "%{$search}%");
-                });
-            })
-            ->orderBy($sort, $direction)
-            ->paginate($perPage)
-            ->withQueryString();
-
         return Inertia::render('Order/index', [
-            'orderList' => $orderList,
+            ...$action->execute($request),
             'statusList' => OrderStatus::list(),
-            'filters' => [
-                'search' => $search,
-                'sort' => $sort,
-                'direction' => $direction,
-                'per_page' => $perPage,
-                'status' => $status
-            ],
         ]);
     }
 

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Enum\OrderStatus;
+use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
 use App\Models\Order;
 use App\Models\User;

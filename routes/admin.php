@@ -1,0 +1,50 @@
+<?php
+
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\LiveChatController;
+use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ServerHealthController;
+use App\Http\Controllers\Admin\StatisticsDashboardController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/token', [ProfileController::class, 'makeAToken'])->name('profile.makeAToken');
+    Route::delete('/profile/token',[ProfileController::class, 'deleteAToken'])->name('profile.deleteAToken');
+
+
+
+
+    Route::middleware('permission:orderDashboard')->resource('/order', OrderController::class);
+
+
+    Route::middleware('permission:livechatDashboard')->group(function () {
+        Route::get('/livechat',[LiveChatController::class, 'index'])->name('livechat.index');
+        Route::get('/livechat/{user}',[LiveChatController::class, 'chat'])->name('livechat.chat');
+        Route::post('/livechat/{user}',[LiveChatController::class, 'send'])->name('livechat.send');
+
+        Route::patch('/livechat/message/{message}/seen', [
+            LiveChatController::class,
+            'markAsSeen',
+        ])->name('livechat.message.seen');
+    });
+
+
+    Route::middleware('permission:activityLogDashboard')->get('/activityLog' ,ActivityLogController::class)->name('activityLog.index');
+
+    Route::middleware('permission:statisticsDashboard')->get('/statisticsDashboard' ,StatisticsDashboardController::class)->name('statisticsDashboard.index');
+
+    Route::middleware('permission:serverHealth')->get('/serverHealth' ,ServerHealthController::class)->name('ServerHealth.index');
+//
+
+
+});
