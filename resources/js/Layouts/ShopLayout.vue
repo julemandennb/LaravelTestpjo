@@ -38,11 +38,8 @@ let searchTimeout = null;
 let searchRequestId = 0;
 
 // Cart
-const cart = ref([]);
+const cartCount = computed(() => page.props.cartCount ?? 0);
 
-const cartCount = computed(() =>
-    cart.value.reduce((total, item) => total + item.quantity, 0)
-);
 
 // Search products
 watch(search, (value) => {
@@ -272,13 +269,11 @@ const authUser = computed(() => page.props.auth?.user);
                     </template>
 
                     <!-- Cart -->
-                    <button
-                        type="button"
+                    <Link
+                        :href="route('shop.cart.index')"
                         class="relative rounded-full bg-gray-100 p-2.5 transition hover:bg-orange-100"
                         aria-label="Shopping cart"
-                        @click="scrollToCart"
                     >
-
                         <CartIcon />
 
                         <span
@@ -287,8 +282,7 @@ const authUser = computed(() => page.props.auth?.user);
                         >
                             {{ cartCount }}
                         </span>
-
-                    </button>
+                    </Link>
 
                 </div>
             </div>

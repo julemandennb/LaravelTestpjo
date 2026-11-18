@@ -3,6 +3,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import { formatPrice } from '@/help/FormatFun';
+import { addToCart } from '@/help/Cart';
 
 defineOptions({
     layout: ShopLayout,
@@ -136,6 +137,8 @@ const props = defineProps({
                         <!-- Right -->
                         <button
                             type="button"
+                            v-if="produkt.quantity > 0"
+                            @click="addToCart(produkt)"
                             class="inline-flex items-center justify-center rounded-full bg-orange-500 px-8 py-4 text-sm font-bold text-white transition hover:bg-orange-600"
                         >
                             Add to Cart →

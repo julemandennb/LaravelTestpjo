@@ -5,6 +5,7 @@ import { Head, router, usePage,Link  } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import { formatPrice } from '@/help/FormatFun';
 import CartIcon from '@/Svg/CartIcon.vue';
+import { addToCart } from '@/help/Cart';
 
 const page = usePage();
 
@@ -198,6 +199,7 @@ onBeforeUnmount(() => {
                                 <button
                                     v-if="produkt.quantity > 0"
                                     type="button"
+                                    @click="addToCart(produkt)"
                                     class="relative rounded-full bg-gray-100 p-2.5 transition hover:bg-orange-100"
                                     aria-label="Shopping cart"
 
