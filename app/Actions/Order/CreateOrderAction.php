@@ -7,6 +7,8 @@ use App\Models\OrderProdukt;
 use App\Models\Produkt;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\Optional;
+use App\Mail\OrderConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 
 class CreateOrderAction
 {
@@ -56,6 +58,10 @@ class CreateOrderAction
             $order->update([
                 'total_price' => $totalPrice,
             ]);
+
+            Mail::to($order->email)->send(
+                new OrderConfirmationMail($order)
+            );
 
             return $order;
         });

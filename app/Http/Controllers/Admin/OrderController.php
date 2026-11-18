@@ -63,7 +63,7 @@ class OrderController extends Controller
         $order->load([
             'products' => function ($query) {
 
-             $query->select('order_produkts.id','quantity', 'name','order_produkts.price');
+             $query->select('order_produkts.id','order_produkts.quantity', 'name','order_produkts.price');
 
             },
             'user' => function ($query) {

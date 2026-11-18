@@ -125,13 +125,12 @@ const clearCart = () => {
                     <span>{{ formatPrice(total()) }}</span>
                 </div>
 
-                <button
-                    type="button"
-                    disabled
-                    class="w-full cursor-not-allowed rounded-lg bg-gray-300 px-6 py-3 font-semibold text-gray-600"
+                <Link
+                    :href="route('shop.checkout.index')"
+                    class="block w-full rounded-lg bg-orange-500 px-6 py-3 text-center font-semibold text-white hover:bg-orange-600"
                 >
-                    Checkout (Coming Soon)
-                </button>
+                    Proceed to Checkout
+                </Link>
 
                 <Link
                     :href="route('shop.produkt.index')"

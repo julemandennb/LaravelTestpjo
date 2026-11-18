@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Actions\User\ShopUserCheckAction;
+use App\Dto\Cart\CartData;
 use App\Http\Controllers\Controller;
 use App\Models\Produkt;
 use Illuminate\Http\Request;
@@ -22,14 +24,15 @@ class CartController extends Controller
         $produktID = $produkt->id;
 
         if (isset($cart[$produktID])) {
-            $cart[$produktID]['quantity'] += $validated['quantity'];
+            $cart[$produktID]->quantity += $validated['quantity'];
         } else {
-            $cart[$produktID] = [
+            $cartData = CartData::from([
                 'produktID' => $produkt->id,
                 'name' => $produkt->name,
                 'price' => $produkt->price,
                 'quantity' => $validated['quantity'],
-            ];
+            ]);
+            $cart[$produktID] = $cartData;
         }
 
         session()->put('cart', $cart);
@@ -37,10 +40,13 @@ class CartController extends Controller
         return back()->with('success', 'Product added to cart!');
     }
 
-    public function index()
+    public function index(ShopUserCheckAction $userCheckAction)
     {
+        $userCheck = $userCheckAction->execute();
+
         $cart = session()->get('cart', []);
         return inertia('Shop/Cart/Index', [
+            ... $userCheck,
             'cart' => array_values($cart),
         ]);
     }

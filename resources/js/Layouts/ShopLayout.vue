@@ -34,6 +34,9 @@ const search = ref('');
 const searchResults = ref([]);
 const searching = ref(false);
 
+const successMessage = computed(() => page.props.flash?.success);
+const errorMessage = computed(() => page.props.flash?.error);
+
 let searchTimeout = null;
 let searchRequestId = 0;
 
@@ -347,6 +350,19 @@ const authUser = computed(() => page.props.auth?.user);
 
         <!-- Page content -->
         <main>
+            <div
+                v-if="successMessage"
+                class="mx-auto mt-4 max-w-7xl rounded-lg bg-green-100 p-4 text-green-800"
+            >
+                {{ successMessage }}
+            </div>
+
+            <div
+                v-if="errorMessage"
+                class="mx-auto mt-4 max-w-7xl rounded-lg bg-red-100 p-4 text-red-800"
+            >
+                {{ errorMessage }}
+            </div>
             <slot />
         </main>
 

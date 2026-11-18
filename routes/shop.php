@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Shop\CartController;
+use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\ProduktController;
 use App\Http\Controllers\Shop\ShopController;
 use Illuminate\Support\Facades\Route;
@@ -32,5 +33,11 @@ Route::prefix('shop')->name('shop.')->group(function () {
 
     Route::delete('/cart', [CartController::class, 'clear'])
         ->name('cart.clear');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout.index');
+
+    Route::post('/checkout', [CheckoutController::class, 'store'])
+        ->name('checkout.store');
 
 });
