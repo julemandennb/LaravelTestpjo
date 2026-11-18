@@ -18,7 +18,8 @@ class Produkt extends Model
     protected $fillable = [
         'name',
         'price',
-        'descript'
+        'descript',
+        'quantity'
     ];
 
        public function getActivitylogOptions(): LogOptions
@@ -28,7 +29,8 @@ class Produkt extends Model
         ->logOnly([
             'name',
             'price',
-            'descript'
+            'descript',
+            'quantity'
         ])
         ->logOnlyDirty();
     }

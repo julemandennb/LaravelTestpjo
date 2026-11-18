@@ -121,7 +121,7 @@ const deleteItme = () =>{
                             <div v-if="order.created_at != order.updated_at">{{ FormatDato(order.updated_at) }}</div>
 
                             <div>make</div>
-                            <div>{{ order.user.name }}</div>
+                            <div>{{ order.user ? order.user.name : "Customer"}}</div>
 
 
                             <div>total price</div>

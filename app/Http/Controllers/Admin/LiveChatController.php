@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Inertia\Inertia;
 use App\Events\MessageSent;
+use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
 
 

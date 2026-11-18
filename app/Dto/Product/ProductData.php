@@ -16,14 +16,5 @@ class ProductData extends Data
         public string|Optional $descript,
         public int|Optional $quantity
     ) {}
-
-    public static function prepareForPipeline(array $properties): array
-    {
-        if (isset($properties['price'])) {
-            $properties['price'] = (int) round((float) $properties['price'] * 100);
-        }
-
-        return $properties;
-    }
 }
 
