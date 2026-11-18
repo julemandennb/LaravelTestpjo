@@ -1,6 +1,7 @@
 <?php
 namespace App\Actions\Produkts;
 
+use App\Dto\Product\ProductData;
 use App\Models\Produkt;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,11 @@ class GetProduktListAction
         );
 
         $search = $request->input('search');
+        if (!is_string($search)) {
+            $search = '';
+        }
 
+        $search = trim($search);
         $sort = $request->input('sort', 'id');
 
         $direction = $request->input('direction', 'desc');
@@ -39,6 +44,7 @@ class GetProduktListAction
                 'name',
                 'price',
                 'descript',
+                'quantity'
             ])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
@@ -50,6 +56,17 @@ class GetProduktListAction
             ->orderBy($sort, $direction)
             ->paginate($perPage)
             ->withQueryString();
+
+                 // Transform Eloquent models into ProductData DTOs
+            $produktList->through(
+                fn (Produkt $produkt) => ProductData::from([
+                    'produktID' => $produkt->id,
+                    'name'      => $produkt->name,
+                    'price'     => $produkt->price,
+                    'descript'  => $produkt->descript,
+                    'quantity'=> $produkt->quantity,
+                ])
+            );
 
         return [
             'produktList' => $produktList,

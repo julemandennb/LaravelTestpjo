@@ -1,9 +1,10 @@
 
 <script setup>
 import { ref, watch, onBeforeUnmount } from 'vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage,Link  } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import { formatPrice } from '@/help/FormatFun';
+import CartIcon from '@/Svg/CartIcon.vue';
 
 const page = usePage();
 
@@ -177,7 +178,7 @@ onBeforeUnmount(() => {
                         <div class="p-5">
 
                             <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-orange-500">
-                                Product #{{ produkt.id }}
+                                Product #{{ produkt.produktID }}
                             </p>
 
                             <h3 class="text-lg font-bold text-gray-900">
@@ -195,11 +196,21 @@ onBeforeUnmount(() => {
                                 </span>
 
                                 <button
+                                    v-if="produkt.quantity > 0"
                                     type="button"
-                                    class="rounded-full bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-500"
+                                    class="relative rounded-full bg-gray-100 p-2.5 transition hover:bg-orange-100"
+                                    aria-label="Shopping cart"
+
                                 >
-                                    Details
+                                    <CartIcon />
                                 </button>
+
+                            <Link
+                                :href="route('shop.produkt.show',produkt.produktID)"
+                                class="rounded-full bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-500"
+                                >
+                                Details →
+                            </Link>
 
                             </div>
 
