@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Label from '@/Components/Label.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import FormatDato from '@/help/FormatDato.js'
+import {formatDato} from '@/help/FormatFun.js';
 import { onMounted, onUnmounted } from 'vue';
 
 
@@ -88,7 +88,7 @@ onUnmounted(() => {
 
                                 <div>{{user.name}}</div>
                                 <div>{{user.email}}</div>
-                                <div>{{FormatDato(user.last_login)}}</div>
+                                <div>{{formatDato(user.last_login)}}</div>
 
 
                             </slot>

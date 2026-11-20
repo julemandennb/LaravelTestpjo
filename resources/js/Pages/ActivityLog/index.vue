@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Label from '@/Components/Label.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import FormatDato from '@/help/FormatDato.js'
+import {formatDato} from '@/help/FormatFun.js';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 
 
@@ -234,7 +234,7 @@ const sortBy = (column) => {
                                     </td>
 
                                     <td class="px-4 py-2 border text-center">
-                                        <Label>{{ FormatDato(item.updated_at) }}</Label>
+                                        <Label>{{ formatDato(item.updated_at) }}</Label>
                                     </td>
                                 </tr>
 
