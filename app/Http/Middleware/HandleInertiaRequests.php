@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\User\ShopUserCheckAction;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -34,6 +35,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            // Shop user permissions and settings
+            ...app(ShopUserCheckAction::class)->execute(),
             'cart' => fn () => array_values(
                 $request->session()->get('cart', [])
             ),

@@ -227,10 +227,10 @@ const authUser = computed(() => page.props.auth?.user);
 
                         <Link
                             v-if="customDashboard"
-                            :href="route('shop')"
+                            :href="route('customer.dashboard')"
                             class="hidden text-sm font-medium hover:text-orange-500 lg:block"
                         >
-                            Dashboard
+                            My Account
                         </Link>
 
                         <Link

@@ -10,7 +10,7 @@ class ShopUserCheckAction
     /**
      * Create a new class instance.
      */
-    public function execute()
+    public function execute(): array
     {
 
         $customDashboard = false;

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Actions\User\ShopUserCheckAction;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Enum\OrderStatus;
@@ -13,9 +12,8 @@ use Spatie\Activitylog\Models\Activity;
 
 class TrackingController extends Controller
 {
-    public function index(Request $request,ShopUserCheckAction $userCheckAction)
+    public function index(Request $request)
     {
-        $userCheck = $userCheckAction->execute();
         $tracking = null;
         $error = null;
 
@@ -64,7 +62,6 @@ class TrackingController extends Controller
         return Inertia::render('Shop/Tracking/Index', [
             'tracking' => $tracking,
             'error' => $error,
-            ...$userCheck
         ]);
     }
 }

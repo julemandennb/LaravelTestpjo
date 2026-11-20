@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Shop;
 
-use App\Actions\User\ShopUserCheckAction;
 use App\Dto\Cart\CartData;
 use App\Http\Controllers\Controller;
 use App\Models\Produkt;
@@ -40,13 +39,11 @@ class CartController extends Controller
         return back()->with('success', 'Product added to cart!');
     }
 
-    public function index(ShopUserCheckAction $userCheckAction)
+    public function index()
     {
-        $userCheck = $userCheckAction->execute();
 
         $cart = session()->get('cart', []);
         return inertia('Shop/Cart/Index', [
-            ... $userCheck,
             'cart' => array_values($cart),
         ]);
     }
