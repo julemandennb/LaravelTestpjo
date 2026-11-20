@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Customer\CustomerDashboardController;
+use App\Http\Controllers\Customer\ProfileController;
 use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\ProduktController;
@@ -44,5 +46,22 @@ Route::prefix('shop')->name('shop.')->group(function () {
 
     Route::get('/tracking', [TrackingController::class, 'index'])
     ->name('tracking.index');
-
 });
+
+Route::middleware(['auth'])
+    ->prefix('customer')
+    ->name('customer.')
+    ->group(function () {
+
+        Route::get('/dashboard', [CustomerDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/profile', [ProfileController::class, 'edit'])
+            ->name('profile.edit');
+
+        Route::patch('/profile', [ProfileController::class, 'update'])
+            ->name('profile.update');
+
+        Route::put('/password', [ProfileController::class, 'updatePassword'])
+            ->name('password.update');
+    });
