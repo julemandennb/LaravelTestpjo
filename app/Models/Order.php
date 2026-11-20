@@ -30,7 +30,8 @@ class Order extends Model
         'phone',
         'address',
         'postNr',
-        'status'
+        'status',
+        'tracking_code'
     ];
 
     protected $casts = [
@@ -48,6 +49,9 @@ class Order extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->tracking_code)) {
+                $model->tracking_code = 'TRK-' . strtoupper(Str::random(10));
             }
         });
     }
@@ -67,7 +71,6 @@ class Order extends Model
         ->useLogName(LogName::ORDER)
         ->logOnly([
             'status',
-            'total_price',
             'name',
             'email',
             'phone',

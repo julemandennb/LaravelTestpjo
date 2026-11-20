@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import FormatDato from '@/help/FormatDato.js'
+import {formatDato} from '@/help/FormatFun.js';
 import DangerButton from '@/Components/DangerButton.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { useForm } from '@inertiajs/vue3';
@@ -100,10 +100,10 @@ const deleteToken = (id) => {
             <template v-for="token in tokens">
 
                 <div>{{token.name}}</div>
-                <div>{{FormatDato(token.last_used_at)}}</div>
-                <div>{{FormatDato(token.expires_at)}}</div>
-                <div>{{FormatDato(token.created_at)}}</div>
-                <div>{{FormatDato(token.updated_at)}}</div>
+                <div>{{formatDato(token.last_used_at)}}</div>
+                <div>{{formatDato(token.expires_at)}}</div>
+                <div>{{formatDato(token.created_at)}}</div>
+                <div>{{formatDato(token.updated_at)}}</div>
                 <div><DangerButton v-if="token.id" @click="deleteToken(token.id)">
                         Delete Token</DangerButton></div>
 

@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import { Head,useForm,router } from '@inertiajs/vue3';
 
-import FormatDato from '@/help/FormatDato.js'
+import {formatDato} from '@/help/FormatFun.js';
 
 import Label from '@/Components/Label.vue'
 import DangerButton from '@/Components/DangerButton.vue';
@@ -115,10 +115,10 @@ const deleteItme = () =>{
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>created_at</div>
-                            <div>{{ FormatDato(order.created_at) }}</div>
+                            <div>{{ formatDato(order.created_at) }}</div>
 
                             <div v-if="order.created_at != order.updated_at">updated_at</div>
-                            <div v-if="order.created_at != order.updated_at">{{ FormatDato(order.updated_at) }}</div>
+                            <div v-if="order.created_at != order.updated_at">{{ formatDato(order.updated_at) }}</div>
 
                             <div>make</div>
                             <div>{{ order.user ? order.user.name : "Customer"}}</div>

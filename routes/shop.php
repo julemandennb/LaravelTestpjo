@@ -4,6 +4,7 @@ use App\Http\Controllers\Shop\CartController;
 use App\Http\Controllers\Shop\CheckoutController;
 use App\Http\Controllers\Shop\ProduktController;
 use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\Shop\TrackingController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,7 +20,7 @@ Route::prefix('shop')->name('shop.')->group(function () {
         ->name('produkt.show');
 
 
- Route::get('/cart', [CartController::class, 'index'])
+    Route::get('/cart', [CartController::class, 'index'])
         ->name('cart.index');
 
     Route::post('/cart', [CartController::class, 'store'])
@@ -39,5 +40,9 @@ Route::prefix('shop')->name('shop.')->group(function () {
 
     Route::post('/checkout', [CheckoutController::class, 'store'])
         ->name('checkout.store');
+
+
+    Route::get('/tracking', [TrackingController::class, 'index'])
+    ->name('tracking.index');
 
 });
