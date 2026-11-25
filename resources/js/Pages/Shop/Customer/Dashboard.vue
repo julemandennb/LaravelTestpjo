@@ -55,6 +55,12 @@ function logout() {
                 >
                     My Profile
                 </Link>
+                <Link
+                    :href="route('customer.orders.index')"
+                    class="rounded-xl border border-gray-200 bg-white px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50"
+                >
+                    My Orders
+                </Link>
                 <button
                     @click="logout"
                     class="rounded-xl border border-red-200 bg-white px-5 py-3 font-semibold text-red-600 transition hover:bg-red-50"
