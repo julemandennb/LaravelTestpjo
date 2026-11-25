@@ -4,7 +4,6 @@ import { Head, Link } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import {formatDato,formatPrice,formatStatus} from '@/help/FormatFun.js';
 
-
 defineOptions({
     layout: ShopLayout,
 });

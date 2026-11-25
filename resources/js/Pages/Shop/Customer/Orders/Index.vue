@@ -3,6 +3,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import {formatDato,formatPrice,formatStatus} from '@/help/FormatFun.js';
+import Nav from  '@/Pages/Shop/Customer/Components/Nav.vue'
 
 
 defineOptions({
@@ -28,12 +29,7 @@ const statusClass = (status) => {
 
     <div class="mx-auto max-w-6xl px-4 py-12">
         <div class="mb-8">
-            <Link
-                :href="route('customer.dashboard')"
-                class="text-sm text-gray-500 hover:text-black"
-            >
-                ← My Account
-            </Link>
+
 
             <h1 class="mt-3 text-3xl font-bold text-gray-900">
                 My Orders
@@ -42,7 +38,11 @@ const statusClass = (status) => {
             <p class="mt-2 text-gray-500">
                 View and follow your previous orders.
             </p>
+
+
         </div>
+
+        <Nav menuOn="My Orders" />
 
         <div v-if="orders.data.length" class="space-y-4">
             <div
