@@ -8,6 +8,7 @@ use App\Http\Controllers\Shop\ProduktController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\Shop\TrackingController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Customer\CustomerOrderController;
 
 
 Route::get('/', [ShopController::class,'index'])->name("shop");
@@ -64,4 +65,10 @@ Route::middleware(['auth'])
 
         Route::put('/password', [ProfileController::class, 'updatePassword'])
             ->name('password.update');
+
+        Route::get('/orders', [CustomerOrderController::class, 'index'])
+            ->name('orders.index');
+
+        Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])
+            ->name('orders.show');
     });
