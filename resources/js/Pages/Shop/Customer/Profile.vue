@@ -2,6 +2,7 @@
 <script setup>
 import { Head, Link, useForm, usePage,router } from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
+import Nav from  '@/Pages/Shop/Customer/Components/Nav.vue'
 
 defineOptions({
     layout: ShopLayout,
@@ -39,9 +40,6 @@ function updatePassword() {
     });
 }
 
-function logout() {
-    router.post(route('logout'));
-}
 </script>
 
 <template>
@@ -66,27 +64,7 @@ function logout() {
             </div>
 
             <!-- Navigation -->
-            <div class="mb-8 flex gap-3">
-                <Link
-                    :href="route('customer.dashboard')"
-                    class="rounded-xl border border-gray-200 bg-white px-5 py-3 font-semibold text-gray-700 hover:border-orange-500"
-                >
-                    ← Dashboard
-                </Link>
-
-                <Link
-                    :href="route('customer.profile.edit')"
-                    class="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white"
-                >
-                    My Profile
-                </Link>
-                <button
-                    @click="logout"
-                    class="rounded-xl border border-red-200 bg-white px-5 py-3 font-semibold text-red-600 transition hover:bg-red-50"
-                >
-                    Log out
-                </button>
-            </div>
+            <Nav menuOn="My Profile" />
 
             <!-- Success Message -->
             <div

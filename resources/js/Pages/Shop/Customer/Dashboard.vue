@@ -3,6 +3,7 @@
 import { Head, Link ,router} from '@inertiajs/vue3';
 import ShopLayout from '@/Layouts/ShopLayout.vue';
 import {formatStatus,formatDato} from '@/help/FormatFun.js';
+import Nav from  '@/Pages/Shop/Customer/Components/Nav.vue'
 
 defineOptions({
     layout: ShopLayout,
@@ -14,9 +15,6 @@ defineProps({
     recentOrders: Array,
 });
 
-function logout() {
-    router.post(route('logout'));
-}
 </script>
 
 <template>
@@ -40,34 +38,7 @@ function logout() {
                 </p>
             </div>
 
-            <!-- Navigation -->
-            <div class="mb-8 flex flex-wrap gap-3">
-                <Link
-                    :href="route('customer.dashboard')"
-                    class="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white"
-                >
-                    Dashboard
-                </Link>
-
-                <Link
-                    :href="route('customer.profile.edit')"
-                    class="rounded-xl border border-gray-200 bg-white px-5 py-3 font-semibold text-gray-700 hover:border-orange-500"
-                >
-                    My Profile
-                </Link>
-                <Link
-                    :href="route('customer.orders.index')"
-                    class="rounded-xl border border-gray-200 bg-white px-5 py-3 font-semibold text-gray-700 hover:bg-gray-50"
-                >
-                    My Orders
-                </Link>
-                <button
-                    @click="logout"
-                    class="rounded-xl border border-red-200 bg-white px-5 py-3 font-semibold text-red-600 transition hover:bg-red-50"
-                >
-                    Log out
-                </button>
-            </div>
+            <Nav menuOn="Dashboard" />
 
             <!-- Statistics -->
             <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
